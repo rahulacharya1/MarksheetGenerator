@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen bg-[#fafafa] pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+
+    <div class="max-w-5xl mx-auto">
+        
+        <nav class="flex mb-8 items-center gap-2 text-sm font-medium text-slate-400">
+            <a href="{% url 'dashboard' %}" class="hover:text-indigo-600 transition-colors">Dashboard</a>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <a href="" class="hover:text-indigo-600 transition-colors">Marks Management</a>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="text-slate-900">Score Entry</span>
+        </nav>
+
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+            <div>
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 text-xs font-bold uppercase tracking-widest mb-4">
+                    Data Entry Mode
+                </div>
+                <h1 class="text-3xl md:text-4xl font-black text-slate-900 tracking-tight mb-3">
+                    Input <span class="text-indigo-600">Subject Scores</span>
+                </h1>
+                <p class="text-slate-500 text-lg max-w-xl">
+                    Select a classroom and student to record academic performance. Accuracy is paramount for final grading.
+                </p>
+            </div>
+
+            <div class="w-full md:w-72">
+                <form method="get" id="classForm">
+                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 ml-1">Classroom Selection</label>
+                    <div class="relative group">
+                        <select name="classroom" required onchange="this.form.submit()" 
+                            class="w-full appearance-none bg-white border border-slate-200 text-slate-900 font-bold text-sm rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 block p-4 transition-all cursor-pointer shadow-sm group-hover:border-slate-300">
+                            <option value="">-- Choose Classroom --</option>
+                            {% for c in classes %}
+                                <option value="{{ c.id }}" {% if selected_class and c.id == selected_class.id %}selected{% endif %}>
+                                    Class {{ c.name }} • {{ c.section }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <div class="absolute inset-y-0 right-4 flex items-center pointer-events-none text-slate-400">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {% if students %}
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="classroom" value="{{ selected_class.id }}">
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                
+                <div class="lg:col-span-4 sticky top-32">
+                    <div class="bg-slate-900 rounded-[2.5rem] p-8 text-white shadow-2xl shadow-slate-200">
+                        <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center mb-6">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </div>
+                        <h3 class="text-xl font-bold mb-6">Select Student</h3>
+                        
+                        <div class="space-y-4">
+                            <select name="student" required class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-white font-medium">
+                                {% for s in students %}
+                                    <option value="{{ s.id }}" class="text-slate-900">
+                                        Roll #{{ s.roll_no }} — {{ s.studentName }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <div class="p-4 bg-white/5 rounded-2xl border border-white/5">
+                                <p class="text-xs text-slate-400 uppercase tracking-widest font-bold mb-1">Target Class</p>
+                                <p class="text-lg font-bold">{{ selected_class.name }} - {{ selected_class.section }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-8">
+                    <div class="bg-white border border-slate-200 rounded-[2.5rem] p-8 md:p-10 shadow-sm">
+                        <div class="flex items-center justify-between mb-8">
+                            <h3 class="text-xl font-black text-slate-900">Subject Breakdown</h3>
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Max Score: 100</span>
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-4">
+                            {% for subject in subjects %}
+                            <div class="group flex items-center justify-between p-6 bg-slate-50 rounded-3xl border border-transparent hover:border-indigo-200 hover:bg-white hover:shadow-xl hover:shadow-indigo-50 transition-all duration-300">
+                                <div class="flex items-center gap-5">
+                                    <div class="w-12 h-12 flex items-center justify-center rounded-2xl bg-white text-slate-400 font-black text-sm border border-slate-100 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300">
+                                        {{ subject.name|slice:":2"|upper }}
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">{{ subject.name }}</h4>
+                                        <p class="text-xs text-slate-400 font-medium">Mandatory Field</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="w-32">
+                                    <input type="number" 
+                                           name="marks_{{ subject.id }}" 
+                                           placeholder="00"
+                                           max="100"
+                                           required 
+                                           class="w-full text-right px-4 py-3 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none font-mono font-black text-2xl text-slate-900 transition-all">
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="mt-10 flex items-center gap-4">
+                            <button type="submit" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-black py-5 rounded-2xl shadow-xl shadow-indigo-200 transition-all active:scale-[0.98] uppercase tracking-widest text-sm">
+                                Finalize & Save Record
+                            </button>
+                            <button type="reset" class="px-8 py-5 text-slate-400 hover:text-red-500 font-bold text-sm transition-colors">
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        {% else %}
+            {% if selected_class %}
+            <div class="text-center p-20 bg-white border border-slate-200 rounded-[2.5rem]">
+                <div class="w-20 h-20 bg-slate-50 text-slate-300 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-width="2" stroke-linecap="round"/></svg>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">No Students Found</h3>
+                <p class="text-slate-500">There are no students enrolled in Class {{ selected_class.name }}.</p>
+            </div>
+            {% endif %}
+        {% endif %}
+
+    </div>
+
+</div>
+{% endblock %}

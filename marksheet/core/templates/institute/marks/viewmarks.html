@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen bg-[#fafafa] pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+
+    <div class="max-w-7xl mx-auto">
+        
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+            <div>
+                <nav class="flex mb-4 items-center gap-2 text-sm font-medium text-slate-400">
+                    <a href="{% url 'dashboard' %}" class="hover:text-indigo-600 transition-colors">Dashboard</a>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <a href="{% url 'managemarks' %}" class="hover:text-indigo-600 transition-colors">Management</a>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span class="text-slate-900">Marks Directory</span>
+                </nav>
+                <h1 class="text-3xl md:text-4xl font-black text-slate-900 tracking-tight mb-3">
+                    Student <span class="text-emerald-600">Results</span>
+                </h1>
+                <p class="text-slate-500 text-lg">Grouped records by student for better clarity.</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+            {% regroup marks by student as student_list %}
+            
+            {% for entry in student_list %}
+            <div class="group bg-white border border-slate-200 rounded-[2.5rem] overflow-hidden hover:shadow-2xl hover:shadow-slate-200 transition-all duration-500">
+                
+                <div class="bg-slate-900 p-6 text-white">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center font-black text-emerald-400">
+                            {{ entry.grouper.studentName|slice:":1" }}
+                        </div>
+                        <span class="text-[10px] font-black bg-emerald-600 px-2 py-1 rounded-lg uppercase tracking-widest">
+                            Roll #{{ entry.grouper.roll_no }}
+                        </span>
+                    </div>
+                    <h3 class="text-xl font-bold truncate">{{ entry.grouper.studentName }}</h3>
+                    <p class="text-slate-400 text-xs font-medium mt-1 uppercase tracking-tighter">
+                        Class {{ entry.list.0.classroom.name }} • {{ entry.list.0.classroom.section }}
+                    </p>
+                </div>
+
+                <div class="p-6 space-y-3">
+                    {% for item in entry.list %}
+                    <div class="flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-100 group-hover:bg-white group-hover:border-slate-200 transition-all">
+                        <span class="text-sm font-bold text-slate-600">{{ item.subject.name }}</span>
+                        <span class="font-mono font-black text-lg 
+                            {% if item.marks >= 75 %} text-emerald-600 
+                            {% elif item.marks >= 35 %} text-indigo-600 
+                            {% else %} text-red-600 {% endif %}">
+                            {{ item.marks }}
+                        </span>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="px-6 pb-6 mt-2">
+                    <div class="pt-4 border-t border-slate-50 flex items-center justify-between">
+                        <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest">Performance Profile</span>
+                        <div class="flex gap-1">
+                            <div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+                            <div class="w-1.5 h-1.5 rounded-full bg-emerald-500/30"></div>
+                            <div class="w-1.5 h-1.5 rounded-full bg-emerald-500/10"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-span-full py-20 text-center bg-white rounded-[2.5rem] border-2 border-dashed border-slate-200">
+                <p class="text-slate-400 font-bold">No academic records found.</p>
+            </div>
+            {% endfor %}
+
+        </div>
+
+    </div>
+    
+</div>
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen bg-[#fafafa] pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+
+    <div class="max-w-5xl mx-auto">
+        
+        <nav class="flex mb-8 items-center gap-2 text-sm font-medium text-slate-400">
+            <a href="{% url 'dashboard' %}" class="hover:text-indigo-600 transition-colors">Dashboard</a>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="text-slate-900">Student Management</span>
+        </nav>
+
+        <div class="mb-12 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div class="space-y-2">
+                <h1 class="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">
+                    Manage <span class="text-cyan-600">Students</span>
+                </h1>
+                <p class="text-slate-500 text-lg max-w-md">
+                    Control your student directory, enroll new pupils, and organize them by class.
+                </p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            <a href="{% url 'viewstudents' %}" class="group relative bg-white border border-slate-200 rounded-[2.5rem] p-10 transition-all duration-500 hover:border-blue-500 hover:shadow-2xl hover:shadow-blue-100">
+                <div class="flex flex-col h-full">
+                    <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-3xl flex items-center justify-center mb-8 group-hover:bg-blue-600 group-hover:text-white transition-all duration-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                    </div>
+                    
+                    <h2 class="text-2xl font-bold text-slate-900 mb-3 group-hover:text-blue-600 transition-colors">Student Directory</h2>
+                    <p class="text-slate-500 leading-relaxed mb-8">
+                        View profiles, check enrollment details, and manage student status across all classes.
+                    </p>
+                    
+                    <div class="mt-auto flex items-center gap-2 text-blue-600 font-bold">
+                        Open Directory 
+                        <svg class="w-5 h-5 transform group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                    </div>
+                </div>
+            </a>
+
+            <a href="{% url 'addstudents' %}" class="group relative bg-slate-900 rounded-[2.5rem] p-10 transition-all duration-500 hover:shadow-2xl hover:shadow-slate-300">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-cyan-500/10 rounded-full blur-3xl group-hover:bg-cyan-500/20 transition-colors"></div>
+                
+                <div class="flex flex-col h-full relative z-10">
+                    <div class="w-16 h-16 bg-white/10 text-white rounded-3xl flex items-center justify-center mb-8 group-hover:rotate-12 transition-transform duration-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                        </svg>
+                    </div>
+                    
+                    <h2 class="text-2xl font-bold text-white mb-3">New Enrollment</h2>
+                    <p class="text-slate-400 leading-relaxed mb-8">
+                        Register a single student or use batch upload to add multiple students to a specific class.
+                    </p>
+                    
+                    <div class="mt-auto flex items-center gap-2 text-white font-bold bg-cyan-600 self-start px-6 py-3 rounded-2xl hover:bg-cyan-500 transition-colors shadow-lg shadow-cyan-900/40">
+                        Register Student
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+
+        <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white border border-slate-200 rounded-3xl p-6">
+                <h4 class="text-slate-900 font-bold mb-2 flex items-center gap-2 text-sm">
+                    <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                    Search Tip
+                </h4>
+                <p class="text-slate-500 text-xs leading-relaxed">Use the directory search to find students by Roll Number or Admission ID instantly.</p>
+            </div>
+            <div class="bg-white border border-slate-200 rounded-3xl p-6">
+                <h4 class="text-slate-900 font-bold mb-2 flex items-center gap-2 text-sm">
+                    <span class="w-2 h-2 rounded-full bg-cyan-500"></span>
+                    Batch Upload
+                </h4>
+                <p class="text-slate-500 text-xs leading-relaxed">Save time by uploading an Excel/CSV file inside the "Register Student" section.</p>
+            </div>
+            <div class="bg-white border border-slate-200 rounded-3xl p-6">
+                <h4 class="text-slate-900 font-bold mb-2 flex items-center gap-2 text-sm">
+                    <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                    Data Integrity
+                </h4>
+                <p class="text-slate-500 text-xs leading-relaxed">Ensure Student Names match their official ID documents for accurate marksheets.</p>
+            </div>
+        </div>
+
+    </div>
+    
+</div>
+{% endblock %}

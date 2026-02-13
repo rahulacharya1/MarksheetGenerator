@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduMarks - Academic Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50">
+
+    <header class="fixed top-0 inset-x-0 z-[60] transition-all duration-500" id="main-header">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4">
+            <nav class="relative flex items-center justify-between bg-white/80 backdrop-blur-2xl border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.04)] rounded-[2rem] px-4 sm:px-8 py-3 transition-all duration-500" id="nav-pills">
+                <div class="flex items-center">
+                    <a href="{% url 'home' %}" class="flex items-center gap-3 group">
+                        <div class="w-11 h-11 bg-slate-900 rounded-2xl flex items-center justify-center shadow-xl shadow-slate-200 group-hover:bg-indigo-600 group-hover:-rotate-6 transition-all duration-500">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                            </svg>
+                        </div>
+                        <span class="text-2xl font-black text-slate-900 tracking-tighter">Edu<span class="text-indigo-600">Marks</span></span>
+                    </a>
+                </div>
+
+                <div class="hidden md:flex items-center bg-slate-100/80 p-1 rounded-2xl border border-slate-200/50">
+                    <a href="{% url 'home' %}" class="px-6 py-2 text-sm font-black text-slate-600 hover:text-indigo-600 rounded-xl hover:bg-white hover:shadow-sm transition-all duration-300">Home</a>
+                    <a href="{% url 'state' %}?type=student" class="px-6 py-2 text-sm font-black text-slate-600 hover:text-indigo-600 rounded-xl hover:bg-white hover:shadow-sm transition-all duration-300">Find Result</a>
+                    <a href="#" class="px-6 py-2 text-sm font-black text-slate-600 hover:text-indigo-600 rounded-xl hover:bg-white hover:shadow-sm transition-all duration-300">Support</a>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    {% if user.is_authenticated %}
+                        <div class="flex items-center gap-4">
+                            <div class="hidden lg:flex flex-col items-end leading-tight mr-1">
+                                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Admin Access</span>
+                                <span class="text-sm font-bold text-slate-900">{{ user.username }}</span>
+                            </div>
+                            <a href="{% url 'dashboard' %}" class="relative flex items-center gap-2 bg-slate-900 text-white pl-2 pr-5 py-2 rounded-2xl hover:bg-indigo-600 transition-all duration-300 group shadow-lg shadow-slate-200">
+                                <div class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center font-black text-xs">
+                                    {{ user.username|slice:":1"|upper }}
+                                </div>
+                                <span class="text-xs font-black uppercase tracking-wide">Dashboard</span>
+                            </a>
+                        </div>
+                    {% else %}
+                        <a href="{% url 'state' %}?type=institute" class="hidden sm:block text-sm font-black text-slate-500 hover:text-indigo-600 transition-colors mr-2">Login</a>
+                        <a href="{% url 'state' %}?type=institute" class="bg-indigo-600 text-white px-6 py-3 rounded-2xl text-sm font-black hover:bg-slate-900 hover:shadow-2xl hover:shadow-indigo-200 transition-all duration-500">
+                            Register School
+                        </a>
+                    {% endif %}
+
+                    <button id="mobile-toggle" class="md:hidden w-11 h-11 flex items-center justify-center text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-2xl transition-all">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 8h16M4 16h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </nav>
+
+            <div id="mobile-drawer" class="hidden md:hidden absolute top-24 inset-x-4 bg-white/95 backdrop-blur-xl rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-slate-100 p-8 flex flex-col gap-3">
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 px-4">Navigation</p>
+                <a href="{% url 'home' %}" class="flex items-center gap-4 p-5 rounded-[1.5rem] bg-slate-50 text-slate-900 font-black">Home</a>
+                <a href="#" class="flex items-center gap-4 p-5 rounded-[1.5rem] text-slate-600 font-bold">Find Results</a>
+                <div class="h-px bg-slate-100 my-2"></div>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" class="flex items-center justify-center p-5 rounded-[1.5rem] bg-indigo-600 text-white font-black">Dashboard</a>
+                {% else %}
+                    <div class="grid grid-cols-2 gap-3">
+                        <a href="{% url 'state' %}?type=institute" class="flex items-center justify-center p-5 rounded-[1.5rem] bg-slate-100 text-slate-900 font-black">Login</a>
+                        <a href="{% url 'state' %}?type=institute" class="flex items-center justify-center p-5 rounded-[1.5rem] bg-indigo-600 text-white font-black">Join</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-white border-t border-slate-100 pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-1 md:col-span-1 space-y-4">
+                    <a href="{% url 'home' %}" class="flex items-center gap-2">
+                        <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white">EM</div>
+                        <span class="text-xl font-bold text-slate-900">EduMarks</span>
+                    </a>
+                    <p class="text-slate-500 text-sm leading-relaxed">Modern standard for digital academic record management.</p>
+                </div>
+                <div>
+                    <h3 class="text-slate-900 font-bold text-sm uppercase mb-4">Platform</h3>
+                    <ul class="space-y-2 text-sm text-slate-500">
+                        <li><a href="#" class="hover:text-indigo-600">Home</a></li>
+                        <li><a href="#" class="hover:text-indigo-600">Search Result</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-slate-900 font-bold text-sm uppercase mb-4">Support</h3>
+                    <ul class="space-y-2 text-sm text-slate-500">
+                        <li><a href="#" class="hover:text-indigo-600">Help Center</a></li>
+                        <li><a href="#" class="hover:text-indigo-600">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-slate-900 font-bold text-sm uppercase mb-4">System Status</h3>
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                        <span class="text-sm text-slate-600">All systems operational</span>
+                    </div>
+                </div>
+            </div>
+            <div class="pt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4 text-slate-400 text-sm">
+                <p>&copy; 2026 EduMarks. Built for excellence.</p>
+                <span class="text-xs font-semibold uppercase tracking-widest">Version 2.0.4</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const header = document.getElementById('main-header');
+        const navPills = document.getElementById('nav-pills');
+        const mobileToggle = document.getElementById('mobile-toggle');
+        const mobileDrawer = document.getElementById('mobile-drawer');
+        const menuIcon = document.getElementById('menu-icon');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 30) {
+                navPills.classList.add('bg-white/95', 'shadow-xl', 'py-2');
+                header.classList.add('pt-2');
+            } else {
+                navPills.classList.remove('bg-white/95', 'shadow-xl', 'py-2');
+                header.classList.remove('pt-2');
+            }
+        });
+
+        mobileToggle.addEventListener('click', () => {
+            const isHidden = mobileDrawer.classList.contains('hidden');
+            mobileDrawer.classList.toggle('hidden');
+            menuIcon.setAttribute('d', isHidden ? 'M6 18L18 6M6 6l12 12' : 'M4 8h16M4 16h16');
+        });
+    </script>
+    
+</body>
+</html>
