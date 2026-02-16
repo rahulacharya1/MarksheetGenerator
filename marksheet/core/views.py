@@ -100,6 +100,23 @@ def dashboard(request):
     })
 
 
+# ---------------- PROFILE ----------------
+@login_required
+def institutionProfile(request):
+    school = Schools.objects.get(user=request.user)
+    return render(request, "institute/profile.html", {"school": school})
+
+
+# ---------------- ABOUT US ----------------
+def aboutUs(request):
+    return render(request, 'about.html')
+
+
+# ---------------- DOCUMENTATION ----------------
+def documentation(request):
+    return render(request, 'institute/documentation.html')
+
+
 # ---------------- RESULT ----------------
 def result(request):
     return render(request, 'result.html')

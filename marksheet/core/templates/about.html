@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen bg-[#fafafa] pt-32 pb-24 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+        
+        <div class="relative bg-slate-900 rounded-[3rem] p-12 md:p-24 overflow-hidden mb-16 shadow-2xl shadow-slate-300">
+            <div class="absolute top-0 right-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl -mr-20 -mt-20"></div>
+            
+            <div class="relative z-10 max-w-3xl">
+                <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/20 text-indigo-300 text-[10px] font-black uppercase tracking-[0.3em] mb-8">
+                    Our Mission
+                </span>
+                <h1 class="text-4xl md:text-6xl font-black text-white leading-tight tracking-tight mb-8">
+                    Simplifying <span class="text-indigo-400">Academic</span> Management for every school.
+                </h1>
+                <p class="text-lg md:text-xl text-slate-400 leading-relaxed font-medium">
+                    EduMarks was built with a single goal: to bridge the gap between complex data and clear, actionable academic insights. We empower educators to focus on teaching while we handle the numbers.
+                </p>
+            </div>
+        </div>
+
+        <div class="mb-24">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+                <div>
+                    <h2 class="text-3xl font-black text-slate-900 tracking-tight">The Pillars of <span class="text-emerald-600">EduMarks</span></h2>
+                    <p class="text-slate-500 font-medium mt-1">What makes our platform the preferred choice for institutions.</p>
+                </div>
+                <div class="h-px flex-1 bg-slate-200 hidden md:block ml-8"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white border border-slate-200 p-10 rounded-[2.5rem] hover:border-indigo-500 transition-all duration-500 group shadow-sm hover:shadow-2xl hover:shadow-indigo-100">
+                    <div class="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-500">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3 tracking-tight">Data Integrity</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed font-medium">We ensure that every mark entered is secured with institutional-grade encryption and backup protocols.</p>
+                </div>
+
+                <div class="bg-white border border-slate-200 p-10 rounded-[2.5rem] hover:border-emerald-500 transition-all duration-500 group shadow-sm hover:shadow-2xl hover:shadow-emerald-100">
+                    <div class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-500">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3 tracking-tight">Extreme Speed</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed font-medium">Our streamlined entry system allows teachers to process marks for an entire class in under 60 seconds.</p>
+                </div>
+
+                <div class="bg-white border border-slate-200 p-10 rounded-[2.5rem] hover:border-orange-500 transition-all duration-500 group shadow-sm hover:shadow-2xl hover:shadow-orange-100">
+                    <div class="w-14 h-14 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-orange-600 group-hover:text-white transition-all duration-500">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3 tracking-tight">Print Ready</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed font-medium">Generate beautiful transcripts that are instantly ready for parents, eliminating manual formatting time.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-[3rem] p-12 flex flex-wrap justify-around items-center gap-12 text-center shadow-sm">
+            <div>
+                <p class="text-4xl font-black text-slate-900 mb-1">500+</p>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Institutions</p>
+            </div>
+            <div class="w-px h-12 bg-slate-100 hidden md:block"></div>
+            <div>
+                <p class="text-4xl font-black text-indigo-600 mb-1">100k+</p>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Students Tracked</p>
+            </div>
+            <div class="w-px h-12 bg-slate-100 hidden md:block"></div>
+            <div>
+                <p class="text-4xl font-black text-emerald-600 mb-1">99.9%</p>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Uptime Record</p>
+            </div>
+        </div>
+
+        <div class="mt-24 text-center">
+            <h2 class="text-2xl font-black text-slate-900 mb-6">Want to learn more about our roadmap?</h2>
+            <a href="{% url 'documentation' %}" class="inline-flex items-center gap-3 px-8 py-4 bg-slate-900 text-white font-bold rounded-2xl hover:bg-indigo-600 transition-all shadow-xl shadow-slate-200">
+                Explore Documentation
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen bg-[#fafafa] pt-32 pb-24 px-4 sm:px-6 lg:px-8 scroll-smooth">
+    <div class="max-w-7xl mx-auto">
+        
+        <div class="flex flex-col lg:flex-row gap-12">
+            
+            <aside class="lg:w-64 flex-shrink-0">
+                <div class="sticky top-32 space-y-1">
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4 px-4">Getting Started</p>
+                    <a href="#introduction" class="block px-4 py-3 rounded-xl text-sm font-bold text-slate-600 hover:bg-white hover:text-indigo-600 transition-all">Introduction</a>
+                    <a href="#setup" class="block px-4 py-3 rounded-xl text-sm font-bold text-slate-600 hover:bg-white hover:text-indigo-600 transition-all">Class Setup</a>
+                    <a href="#students" class="block px-4 py-3 rounded-xl text-sm font-bold text-slate-600 hover:bg-white hover:text-indigo-600 transition-all">Student Enrollment</a>
+                    <a href="#marks" class="block px-4 py-3 rounded-xl text-sm font-bold text-slate-600 hover:bg-white hover:text-indigo-600 transition-all">Marks Entry</a>
+                    <a href="#reports" class="block px-4 py-3 rounded-xl text-sm font-bold text-slate-600 hover:bg-white hover:text-indigo-600 transition-all">Generating Reports</a>
+                </div>
+            </aside>
+
+            <div class="flex-1 bg-white border border-slate-200 rounded-[3rem] p-8 md:p-16 shadow-2xl shadow-slate-200/50">
+                
+                <section id="introduction" class="scroll-mt-32">
+                    <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-50 text-indigo-600 text-[10px] font-black uppercase tracking-widest mb-6">
+                        System Guide v1.0
+                    </span>
+                    <h1 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-6">
+                        Welcome to the <span class="text-indigo-600">EduMarks</span> Documentation.
+                    </h1>
+                    <p class="text-lg text-slate-500 leading-relaxed">
+                        This guide will help you navigate the institutional portal, from setting up your first classroom to generating professional student transcripts.
+                    </p>
+                </section>
+
+                <hr class="my-12 border-slate-100">
+
+                <section id="setup" class="scroll-mt-32">
+                    <h2 class="text-2xl font-black text-slate-900 mt-12 mb-4 flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-lg bg-slate-900 text-white flex-shrink-0 flex items-center justify-center text-xs italic">01</span>
+                        Classroom Structure
+                    </h2>
+                    <p class="text-slate-600 leading-relaxed mb-6">Before adding students, you must define your school's structure. This allows the system to group results accurately.</p>
+                    
+                    <div class="bg-white border border-slate-100 p-6 rounded-3xl mb-4 shadow-sm">
+                        <h4 class="font-bold text-slate-900 mb-2">Defining Sections</h4>
+                        <p class="text-sm text-slate-600 m-0">Navigate to <span class="font-bold">Management > Class Structure</span>. Here you can add class names (e.g., 10th) and sections (e.g., A, B, C). This is a one-time setup per academic year.</p>
+                    </div>
+                </section>
+
+                <section id="students" class="scroll-mt-32">
+                    <h2 class="text-2xl font-black text-slate-900 mt-12 mb-4 flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-lg bg-indigo-600 text-white flex-shrink-0 flex items-center justify-center text-xs italic">02</span>
+                        Student Enrollment
+                    </h2>
+                    <p class="text-slate-600 leading-relaxed mb-6">Once classes are ready, you can populate them with students. Each student is assigned a unique Roll Number for tracking.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-white border border-slate-100 p-6 rounded-3xl mb-4 shadow-sm border-l-4 border-l-cyan-500">
+                            <h4 class="font-bold text-slate-900 mb-2">Single Entry</h4>
+                            <p class="text-sm text-slate-600 m-0">Use the manual form to add individual students with their specific roll numbers.</p>
+                        </div>
+                        <div class="bg-white border border-slate-100 p-6 rounded-3xl mb-4 shadow-sm border-l-4 border-l-indigo-500">
+                            <h4 class="font-bold text-slate-900 mb-2">Verification</h4>
+                            <p class="text-sm text-slate-600 m-0">Ensure the Student Name matches official records as it will appear on the final transcript.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="marks" class="scroll-mt-32">
+                    <h2 class="text-2xl font-black text-slate-900 mt-12 mb-4 flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-lg bg-emerald-600 text-white flex-shrink-0 flex items-center justify-center text-xs italic">03</span>
+                        Marks Management
+                    </h2>
+                    <p class="text-slate-600 leading-relaxed mb-6 text-base">The Marks Entry system is designed for speed. You can update scores subject by subject for an entire class.</p>
+                    
+                    <div class="bg-slate-50 rounded-3xl p-8 border border-slate-100">
+                        <h4 class="font-bold text-slate-900 mb-4 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            Best Practices
+                        </h4>
+                        <ul class="space-y-3 text-sm text-slate-600">
+                            <li class="flex gap-2"><strong>•</strong> Always select the Class and Section first to load the correct student list.</li>
+                            <li class="flex gap-2"><strong>•</strong> Marks are saved instantly upon submission of the update form.</li>
+                            <li class="flex gap-2"><strong>•</strong> The system automatically flags scores below 35% as "Fail" on reports.</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section id="reports" class="scroll-mt-32">
+                    <h2 class="text-2xl font-black text-slate-900 mt-12 mb-4 flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-lg bg-orange-500 text-white flex-shrink-0 flex items-center justify-center text-xs italic">04</span>
+                        Professional Reports
+                    </h2>
+                    <p class="text-slate-600 leading-relaxed mb-6">EduMarks generates high-fidelity transcripts. These are "Print-Ready," meaning all navigation menus are hidden when you press <code class="bg-slate-100 px-1.5 py-0.5 rounded text-indigo-600">Ctrl + P</code>.</p>
+                    
+                    <div class="p-6 border-2 border-dashed border-slate-200 rounded-3xl text-center">
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Tip: Use Google Chrome for the best print layout scaling.</p>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+        
+    </div>
+</div>
+{% endblock %}

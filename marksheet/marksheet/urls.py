@@ -10,11 +10,14 @@ urlpatterns = [
     path('', home, name="home"),
     path('state/', state, name="state"),
     path('result/', result, name="result"),
+    path('about-us/', aboutUs, name='aboutus'),
+    path('documentation/', documentation, name='documentation'),
     path('login/', loginView, name="login"),
     path('logout/', logoutView, name="logout"),
     path('register/', registerView, name="register"),
     
     path('dashboard/', dashboard, name="dashboard"),
+    path('profile/', institutionProfile, name='profile'),
     
     path('manageclass/', manageClass, name="manageclass"),
     path('addclass/', addclass, name="addclass"),
@@ -27,4 +30,5 @@ urlpatterns = [
     path('managemarks/', manageMarks, name="managemarks"),
     path('addmarks/', addMarks, name="addmarks"),
     path('viewmarks/', viewMarks, name="viewmarks"),
+    path('viewresults/', viewResults, name="viewresults"),
 ]
