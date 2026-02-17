@@ -4,9 +4,10 @@ from core.views import *
 from core.class_views import *
 from core.student_views import *
 from core.marks_views import *
+from core.admin_views import *
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('superadmin/', admin.site.urls),
     path('', home, name="home"),
     path('state/', state, name="state"),
     path('result/', result, name="result"),
@@ -31,4 +32,9 @@ urlpatterns = [
     path('addmarks/', addMarks, name="addmarks"),
     path('viewmarks/', viewMarks, name="viewmarks"),
     path('viewresults/', viewResults, name="viewresults"),
+    
+    path('admin-dashboard', admin_dashboard, name="admin-dashboard"),
+    path('addState', addState, name="addState"),
+    path('viewState', viewState, name="viewState"),
+    path('viewInstitute', viewInstitute, name="viewInstitute"),
 ]

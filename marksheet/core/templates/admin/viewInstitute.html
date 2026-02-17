@@ -1,0 +1,111 @@
+{% extends "admin/adminbase.html" %}
+
+{% block content %}
+<div class="min-h-screen pt-32 pb-24 px-4 sm:px-6 lg:px-8 bg-[#fafafa]">
+    <div class="max-w-7xl mx-auto">
+
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
+            <div>
+                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 text-[10px] font-black uppercase tracking-widest mb-4 border border-indigo-100">
+                    Administrative Hub
+                </span>
+                <h1 class="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">
+                    Registered <span class="text-indigo-600">Institutions</span>
+                </h1>
+                <p class="text-slate-500 font-medium mt-2">Browse, monitor, and manage school accounts across all regions.</p>
+            </div>
+
+            <div class="flex gap-4">
+                <div class="relative group">
+                    <input type="text" id="schoolSearch" placeholder="Search schools..." 
+                        class="pl-12 pr-6 py-3.5 bg-white border border-slate-200 rounded-2xl shadow-sm focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-bold text-slate-700 outline-none w-64 md:w-80">
+                    <div class="absolute inset-y-0 left-4 flex items-center text-slate-400 group-focus-within:text-indigo-600 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-[2.5rem] overflow-hidden shadow-sm">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-50/50 border-b border-slate-100">
+                            <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Institution Name</th>
+                            <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">State/Region</th>
+                            <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Admin User</th>
+                            <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Status</th>
+                            <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50" id="schoolTableBody">
+                        {% if schools %}
+                            {% for school in schools %}
+                            <tr class="group hover:bg-slate-50/80 transition-all duration-300 school-row">
+                                <td class="px-8 py-6">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-xs group-hover:bg-indigo-600 transition-colors">
+                                            {{ school.name|slice:":1"|upper }}
+                                        </div>
+                                        <div>
+                                            <p class="font-black text-slate-900 school-name">{{ school.name }}</p>
+                                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">UID: #INST-{{ school.id|stringformat:"04d" }}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-8 py-6 text-sm font-bold text-slate-600">
+                                    {{ school.state.name }}
+                                </td>
+                                <td class="px-8 py-6">
+                                    <span class="text-xs font-bold text-slate-500">{{ school.user.username }}</span>
+                                </td>
+                                <td class="px-8 py-6">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-600 text-[10px] font-black uppercase tracking-widest border border-emerald-100">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                        Active
+                                    </span>
+                                </td>
+                                <td class="px-8 py-6 text-right">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <a href="#" class="p-2 bg-slate-50 text-slate-400 rounded-lg hover:bg-indigo-600 hover:text-white transition-all shadow-sm">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                                        </a>
+                                        <button class="p-2 bg-slate-50 text-slate-400 rounded-lg hover:bg-rose-500 hover:text-white transition-all shadow-sm">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="px-8 py-20 text-center">
+                                    <div class="flex flex-col items-center">
+                                        <div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center text-slate-300 mb-4 border border-slate-100">
+                                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.183.394l-1.15.908a2 2 0 00-.72 2.247 2.025 2.025 0 002.025 1.741h13.95a2.025 2.025 0 002.025-1.741 2 2 0 00-.72-2.247l-1.15-.908z"/></svg>
+                                        </div>
+                                        <p class="text-slate-400 font-bold italic tracking-tight">No schools found for the selected criteria.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const searchInput = document.getElementById('schoolSearch');
+    if(searchInput) {
+        searchInput.addEventListener('keyup', function() {
+            let filter = this.value.toLowerCase();
+            document.querySelectorAll('.school-row').forEach(row => {
+                let name = row.querySelector('.school-name').textContent.toLowerCase();
+                row.style.display = name.includes(filter) ? "" : "none";
+            });
+        });
+    }
+</script>
+{% endblock %}
