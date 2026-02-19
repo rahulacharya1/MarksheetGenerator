@@ -11,6 +11,8 @@ urlpatterns = [
     path('', home, name="home"),
     path('state/', state, name="state"),
     path('result/', result, name="result"),
+    path("show-result/", showResult, name="showResult"),
+
     path('about-us/', aboutUs, name='aboutus'),
     path('documentation/', documentation, name='documentation'),
     path('login/', loginView, name="login"),

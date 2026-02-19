@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="min-h-screen bg-slate-50 pt-28 pb-20 px-4 flex justify-center">
+    <div class="max-w-4xl w-full bg-white shadow-2xl rounded-3xl p-10 border border-slate-200">
+
+        <!-- Header -->
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-black text-slate-900 mb-2">
+                Academic <span class="text-indigo-600">Marksheet</span>
+            </h1>
+            <p class="text-slate-500">Official Result Statement</p>
+        </div>
+
+        <!-- Student Info -->
+        <div class="grid md:grid-cols-2 gap-6 mb-10 bg-slate-50 p-6 rounded-2xl">
+            <div>
+                <p class="text-sm text-slate-400">Student Name</p>
+                <p class="font-bold text-lg text-slate-800">{{ student.studentName }}</p>
+            </div>
+
+            <div>
+                <p class="text-sm text-slate-400">Roll Number</p>
+                <p class="font-bold text-lg text-slate-800">{{ student.roll_no }}</p>
+            </div>
+
+            <div>
+                <p class="text-sm text-slate-400">School</p>
+                <p class="font-bold text-lg text-slate-800">{{ student.school.name }}</p>
+            </div>
+
+            <div>
+                <p class="text-sm text-slate-400">Class</p>
+                <p class="font-bold text-lg text-slate-800">
+                    Grade {{ student.class_room.name }} — Section {{ student.class_room.section }}
+                </p>
+            </div>
+        </div>
+
+        <!-- Marks Table -->
+        <div class="overflow-x-auto mb-10">
+            <table class="w-full border-collapse">
+                <thead>
+                    <tr class="bg-indigo-600 text-white">
+                        <th class="p-4 text-left">Subject</th>
+                        <th class="p-4 text-center">Marks Obtained</th>
+                        <th class="p-4 text-center">Maximum Marks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for m in marks %}
+                    <tr class="border-b">
+                        <td class="p-4 font-semibold text-slate-700">
+                            {{ m.subject.name }}
+                        </td>
+                        <td class="p-4 text-center font-bold text-slate-800">
+                            {{ m.marks }}
+                        </td>
+                        <td class="p-4 text-center text-slate-500">
+                            100
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Summary -->
+        <div class="grid md:grid-cols-4 gap-6 text-center">
+
+            <div class="bg-slate-100 p-6 rounded-2xl">
+                <p class="text-sm text-slate-500">Total Marks</p>
+                <p class="text-2xl font-black text-slate-900">
+                    {{ total_obtained }} / {{ total_possible }}
+                </p>
+            </div>
+
+            <div class="bg-slate-100 p-6 rounded-2xl">
+                <p class="text-sm text-slate-500">Percentage</p>
+                <p class="text-2xl font-black text-indigo-600">
+                    {{ percentage }}%
+                </p>
+            </div>
+
+            <div class="bg-slate-100 p-6 rounded-2xl">
+                <p class="text-sm text-slate-500">Grade</p>
+                <p class="text-2xl font-black text-slate-900">
+                    {{ grade }}
+                </p>
+            </div>
+
+            <div class="p-6 rounded-2xl 
+                {% if percentage >= 35 %}
+                    bg-green-100
+                {% else %}
+                    bg-red-100
+                {% endif %}
+            ">
+                <p class="text-sm text-slate-500">Result</p>
+                <p class="text-2xl font-black 
+                    {% if percentage >= 35 %}
+                        text-green-600
+                    {% else %}
+                        text-red-600
+                    {% endif %}
+                ">
+                    {% if percentage >= 35 %}
+                        PASS
+                    {% else %}
+                        FAIL
+                    {% endif %}
+                </p>
+            </div>
+
+        </div>
+
+        <!-- Print Button -->
+        <div class="text-center mt-12">
+            <button onclick="window.print()" 
+                class="px-8 py-4 bg-slate-900 text-white rounded-xl font-bold hover:bg-indigo-600 transition">
+                Print Marksheet
+            </button>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
