@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.admin.views.decorators import staff_member_required
-from .models import States, Schools
+from .models import State, School, Subject
 
 
 @staff_member_required
@@ -12,7 +12,7 @@ def admin_dashboard (request):
 def addState (request):
     if request.method == "POST":
         name = request.POST.get("name")
-        States.objects.create(
+        State.objects.create(
             name = name
         )
         return redirect(viewState)
@@ -21,16 +21,33 @@ def addState (request):
 
 @staff_member_required
 def viewState(request):
-    states = States.objects.all()
+    states = State.objects.all()
     return render(request, "admin/viewState.html", {"states":states})
 
 
 @staff_member_required
 def viewInstitute(request):
-    state = States.objects.all()
-    schools = Schools.objects.all()
+    state = State.objects.all()
+    schools = School.objects.all()
     return render(request, "admin/viewInstitute.html", {
         "states":state,
         "schools":schools
     })
+
+
+@staff_member_required
+def viewSubject(request):
+    subject = Subject.objects.all()
+    return render(request, "admin/viewSubject.html", {"subjects":subject})
+
+
+@staff_member_required
+def addSubject(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        Subject.objects.create(
+            name = name
+        )
+        return redirect(viewSubject)
+    return render(request, "admin/addSubject.html")
 

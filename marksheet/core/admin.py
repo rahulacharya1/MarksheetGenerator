@@ -3,10 +3,10 @@ from .models import *
 
 # Register your models here.
 
-admin.site.register(States)
-admin.site.register(Schools)
+admin.site.register(State)
+admin.site.register(School)
 admin.site.register(ClassRoom)
-admin.site.register(Students)
-admin.site.register(Subjects)
-admin.site.register(Marks)
+admin.site.register(Student)
+admin.site.register(Subject)
+admin.site.register(Mark)
 

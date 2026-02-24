@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Schools, ClassRoom, Students
+from .models import School, ClassRoom, Student
 
 
 # ---------------- MANAGE STUDENTS ----------------
@@ -13,8 +13,8 @@ def manageStudents(request):
 @login_required
 def addStudents(request):
     try:
-        school = Schools.objects.get(user=request.user)
-    except Schools.DoesNotExist:
+        school = School.objects.get(user=request.user)
+    except School.DoesNotExist:
         return redirect('dashboard')
 
     classrooms = ClassRoom.objects.filter(school=school)
@@ -25,7 +25,7 @@ def addStudents(request):
         roll = request.POST.get("roll")
         dob = request.POST.get("dob")
 
-        roll_exists = Students.objects.filter(
+        roll_exists = Student.objects.filter(
             school=school,
             class_room_id=classroom_id,
             roll_no=roll
@@ -41,7 +41,7 @@ def addStudents(request):
             school=school
         )
 
-        Students.objects.create(
+        Student.objects.create(
             school=school,
             class_room=classroom,
             studentName=studentname,
@@ -59,9 +59,9 @@ def addStudents(request):
 # ---------------- VIEW STUDENT ----------------
 @login_required
 def viewStudents(request):
-    school = Schools.objects.get(user=request.user)
+    school = School.objects.get(user=request.user)
     
-    students = Students.objects.filter(school=school).order_by(
+    students = Student.objects.filter(school=school).order_by(
         'class_room__name', 
         'class_room__section', 
         'roll_no'

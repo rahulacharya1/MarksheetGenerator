@@ -45,10 +45,10 @@
                                 <td class="px-8 py-6">
                                     <div class="flex items-center gap-4">
                                         <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-xs group-hover:bg-indigo-600 transition-colors">
-                                            {{ school.name|slice:":1"|upper }}
+                                            {{ school.school_name|slice:":1"|upper }}
                                         </div>
                                         <div>
-                                            <p class="font-black text-slate-900 school-name">{{ school.name }}</p>
+                                            <p class="font-black text-slate-900 school-name">{{ school.school_name }}</p>
                                             <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">UID: #INST-{{ school.id|stringformat:"04d" }}</p>
                                         </div>
                                     </div>

@@ -14,7 +14,7 @@ def home(request):
 # ---------------- STATE SELECTION ----------------
 def state(request):
     type_param = request.GET.get('type')
-    states = States.objects.all()
+    states = State.objects.all()
     return render(request, "state.html", {
         "states": states,
         "type": type_param
@@ -27,8 +27,8 @@ def loginView(request):
     state = None
     if state_id:
         try:
-            state = States.objects.get(id=state_id)
-        except States.DoesNotExist:
+            state = State.objects.get(id=state_id)
+        except State.DoesNotExist:
             return redirect('state')
 
     if request.method == "POST":
@@ -52,36 +52,72 @@ def registerView(request):
     if not state_id:
         return redirect('state')
 
-    try:
-        state = States.objects.get(id=state_id)
-    except States.DoesNotExist:
+    state = State.objects.filter(id=state_id).first()
+    if not state:
         return redirect('state')
 
     if request.method == "POST":
-        first_name = request.POST.get("first_name")
-        email = request.POST.get("email")
+        
+        school_name = request.POST.get("school_name")
+        established_year = request.POST.get("established_year")
+        board = request.POST.get("board")
+        affiliation_number = request.POST.get("affiliation_number")
+
+        email = request.POST.get("official_email")
+        phone = request.POST.get("phone")
+        city = request.POST.get("city")
+        pincode = request.POST.get("pincode")
+
+        admin_name = request.POST.get("admin_name")
         username = request.POST.get("username")
         password = request.POST.get("password")
+        confirm_password = request.POST.get("confirm_password")
 
-        newUser = User.objects.create_user(
-            first_name=first_name,
+        registration_certificate = request.FILES.get("registration_certificate")
+
+        if password != confirm_password:
+            return render(request, "institute/register.html", {
+                "state": state,
+                "error": "Passwords do not match"
+            })
+
+        if User.objects.filter(username=username).exists():
+            return render(request, "institute/register.html", {
+                "state": state,
+                "error": "Username already exists"
+            })
+
+        if School.objects.filter(official_email=email).exists():
+            return render(request, "institute/register.html", {
+                "state": state,
+                "error": "Official email already registered"
+            })
+
+        user = User.objects.create_user(
             username=username,
             password=password,
-            email=email
+            email=email,
+            first_name=admin_name
         )
 
-        Schools.objects.create(
+        School.objects.create(
+            user=user,
+            school_name=school_name,
+            established_year=established_year if established_year else None,
+            board=board,
+            affiliation_number=affiliation_number,
+            official_email=email,
+            phone=phone,
+            city=city,
             state=state,
-            user=newUser,
-            name=first_name,
+            pincode=pincode,
+            registration_certificate=registration_certificate
         )
 
-        login(request, newUser)
+        login(request, user)
         return redirect('dashboard')
 
-    return render(request, "institute/register.html", {
-        "state": state
-    })
+    return render(request, "institute/register.html", {"state": state})
 
 
 # ---------------- LOGOUT ----------------
@@ -93,7 +129,7 @@ def logoutView(request):
 # ---------------- DASHBOARD ----------------
 @login_required
 def dashboard(request):
-    school = Schools.objects.get(user=request.user)
+    school = School.objects.get(user=request.user)
     state = school.state
     return render(request, "institute/dashboard.html", {
         "school": school,
@@ -104,7 +140,7 @@ def dashboard(request):
 # ---------------- PROFILE ----------------
 @login_required
 def institutionProfile(request):
-    school = Schools.objects.get(user=request.user)
+    school = School.objects.get(user=request.user)
     return render(request, "institute/profile.html", {"school": school})
 
 
@@ -125,7 +161,7 @@ def result(request):
     if not state_id:
         return redirect("state")
 
-    schools = Schools.objects.filter(state_id=state_id)
+    schools = School.objects.filter(state_id=state_id)
 
     school_id = request.GET.get("school")
     class_id = request.GET.get("classroom")
@@ -137,7 +173,7 @@ def result(request):
         classrooms = ClassRoom.objects.filter(school_id=school_id)
 
     if class_id:
-        students = Students.objects.filter(class_room_id=class_id)
+        students = Student.objects.filter(class_room_id=class_id)
 
     return render(request, "result.html", {
         "schools": schools,
@@ -157,7 +193,7 @@ def showResult(request):
     state_id = request.POST.get("state_id")
     student_id = request.POST.get("roll_no")
 
-    student = Students.objects.filter(
+    student = Student.objects.filter(
         id=student_id,
         school__state_id=state_id
     ).first()
@@ -165,7 +201,7 @@ def showResult(request):
     if not student:
         return redirect("state")
 
-    student_marks = Marks.objects.filter(
+    student_marks = Mark.objects.filter(
         student=student
     ).select_related("subject")
 

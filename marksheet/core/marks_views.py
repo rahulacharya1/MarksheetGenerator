@@ -13,10 +13,10 @@ def manageMarks(request):
 # ---------------- ADD MARKS ----------------
 @login_required
 def addMarks(request):
-    school = Schools.objects.get(user=request.user)
+    school = School.objects.get(user=request.user)
 
     classes = ClassRoom.objects.filter(school=school)
-    subjects = Subjects.objects.all()
+    subjects = Subject.objects.all()
 
     selected_class = None
     students = None
@@ -26,12 +26,12 @@ def addMarks(request):
         student_id = request.POST.get("student")
 
         selected_class = ClassRoom.objects.get(id=class_id)
-        student = Students.objects.get(id=student_id)
+        student = Student.objects.get(id=student_id)
 
         for subject in subjects:
             marks_value = request.POST.get(f"marks_{subject.id}")
             if marks_value:
-                Marks.objects.update_or_create(
+                Mark.objects.update_or_create(
                     student=student,
                     subject=subject,
                     defaults={
@@ -45,7 +45,7 @@ def addMarks(request):
     class_id = request.GET.get("classroom")
     if class_id:
         selected_class = ClassRoom.objects.get(id=class_id)
-        students = Students.objects.filter(class_room=selected_class)
+        students = Student.objects.filter(class_room=selected_class)
 
     context = {
         "classes": classes,
@@ -60,9 +60,9 @@ def addMarks(request):
 # ---------------- VIEW MARKS ----------------
 @login_required
 def viewMarks(request):
-    school = Schools.objects.get(user=request.user)
+    school = School.objects.get(user=request.user)
 
-    marks = Marks.objects.filter(
+    marks = Mark.objects.filter(
         student__school=school
     ).select_related("student", "subject", "classroom").order_by("classroom", "student__studentName")
 
@@ -74,13 +74,13 @@ def viewResults(request):
     student_id = request.GET.get("student_id")
 
     if student_id:
-        student = Students.objects.filter(
+        student = Student.objects.filter(
             id=student_id,
             school__user=request.user
         ).first()
 
         if student:
-            student_marks = Marks.objects.filter(
+            student_marks = Mark.objects.filter(
                 student=student
             ).select_related("subject", "classroom")
 

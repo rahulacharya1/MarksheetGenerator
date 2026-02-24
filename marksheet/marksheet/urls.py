@@ -39,4 +39,6 @@ urlpatterns = [
     path('addState', addState, name="addState"),
     path('viewState', viewState, name="viewState"),
     path('viewInstitute', viewInstitute, name="viewInstitute"),
+    path('addSubject', addSubject, name="addSubject"),
+    path('viewSubject', viewSubject, name="viewSubject"),
 ]

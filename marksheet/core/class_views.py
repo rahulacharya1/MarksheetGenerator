@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Schools, ClassRoom
+from .models import School, ClassRoom
 
 
 # ---------------- MANAGE CLASS ----------------
@@ -12,7 +12,7 @@ def manageClass(request):
 # ---------------- ADD CLASS ----------------
 @login_required
 def addclass(request):
-    school = Schools.objects.get(user=request.user)
+    school = School.objects.get(user=request.user)
 
     if request.method == "POST":
         classname = request.POST.get("classname")
@@ -59,7 +59,7 @@ def addclass(request):
 # ---------------- VIEW CLASS ----------------
 @login_required
 def viewclass(request):
-    school = Schools.objects.get(user=request.user)
+    school = School.objects.get(user=request.user)
     classroom = ClassRoom.objects.filter(school=school)
 
     return render(request, "institute/class/viewclass.html", {
