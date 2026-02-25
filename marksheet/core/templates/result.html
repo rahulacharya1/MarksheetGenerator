@@ -1,10 +1,8 @@
 {% extends "base.html" %}
+
 {% block content %}
-
 <div class="min-h-screen bg-[#fafafa] pt-32 pb-20 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
-
     <div class="max-w-xl w-full">
-
         <div class="text-center mb-10">
             <h1 class="text-4xl font-black text-slate-900 tracking-tight mb-2">
                 Result <span class="text-indigo-600">Verification</span>
@@ -16,93 +14,67 @@
 
         <div class="bg-white border border-slate-200 rounded-[3rem] p-10 shadow-2xl shadow-slate-200/50">
 
-            <!-- FORM START -->
-            <form action="{% url 'showResult' %}" method="POST" class="space-y-6">
-                {% csrf_token %}
+            <!-- STEP 1 & 2: School & Class Selection (GET method) -->
+            <form action="{% url 'result' %}" method="get" class="space-y-6">
 
-                <!-- Hidden state -->
-                <input type="hidden" name="state_id" value="{{ state_id }}">
+                <!-- STATE -->
+                <input type="hidden" name="state" value="{{ state_id }}">
 
                 <!-- SCHOOL -->
                 <div class="space-y-2">
                     <label class="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">
                         School Name
                     </label>
-
-                    <select 
-                        onchange="window.location.href='?state={{ state_id }}&school=' + this.value"
-                        class="w-full bg-slate-50 rounded-2xl px-6 py-4 font-bold cursor-pointer">
-
+                    <select name="school" onchange="this.form.submit()" class="w-full bg-slate-50 rounded-2xl px-6 py-4 font-bold cursor-pointer" required>
                         <option value="">Select your school</option>
-
                         {% for school in schools %}
-                            <option value="{{ school.id }}"
-                                {% if school.id|stringformat:"s" == school_id %}selected{% endif %}>
-                                {{ school.name }}
+                            <option value="{{ school.id }}" {% if school.id|stringformat:"s" == school_id %}selected{% endif %}>
+                                {{ school.school_name }}
                             </option>
                         {% endfor %}
                     </select>
                 </div>
 
                 <!-- CLASSROOM -->
-                {% if classrooms %}
                 <div class="space-y-2">
                     <label class="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">
                         Classroom
                     </label>
-
-                    <select 
-                        onchange="window.location.href='?state={{ state_id }}&school={{ school_id }}&classroom=' + this.value"
-                        class="w-full bg-slate-50 rounded-2xl px-6 py-4 font-bold cursor-pointer">
-
+                    <select name="classroom" {% if not school_id %}disabled{% endif %} onchange="this.form.submit()" class="w-full bg-slate-50 rounded-2xl px-6 py-4 font-bold cursor-pointer">
                         <option value="">Select your classroom</option>
-
-                        {% for c in classrooms %}
-                            <option value="{{ c.id }}"
-                                {% if c.id|stringformat:"s" == class_id %}selected{% endif %}>
-                                Grade {{ c.name }} — Section {{ c.section }}
-                            </option>
-                        {% endfor %}
+                        {% if classrooms %}
+                            {% for c in classrooms %}
+                                <option value="{{ c.id }}" {% if c.id|stringformat:"s" == class_id %}selected{% endif %}>
+                                    Grade {{ c.name }} — Section {{ c.section }}
+                                </option>
+                            {% endfor %}
+                        {% endif %}
                     </select>
                 </div>
-                {% endif %}
+            </form>
 
-                <!-- STUDENT -->
-                {% if students %}
+            <!-- STEP 3: Roll Number & Submit (POST method) -->
+            {% if class_id %}
+            <form action="{% url 'showResult' %}" method="post" class="space-y-6">
+                {% csrf_token %}
+                <input type="hidden" name="state_id" value="{{ state_id }}">
+                <input type="hidden" name="school_id" value="{{ school_id }}">
+                <input type="hidden" name="class_id" value="{{ class_id }}">
+
                 <div class="space-y-2">
                     <label class="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">
                         Roll Number
                     </label>
-
-                    <select name="roll_no" required
-                        class="w-full bg-slate-50 rounded-2xl px-6 py-4 font-bold cursor-pointer">
-
-                        <option value="">Select your Roll Number</option>
-
-                        {% for s in students %}
-                            <option value="{{ s.id }}">
-                                {{ s.roll_no }} — {{ s.studentName }}
-                            </option>
-                        {% endfor %}
-                    </select>
+                    <input type="text" name="roll_no" placeholder="Enter your Roll Number" class="w-full bg-slate-50 rounded-2xl px-6 py-4 font-bold" required>
                 </div>
-                {% endif %}
 
-                <!-- SUBMIT BUTTON -->
-                {% if students %}
-                <button type="submit"
-                    class="w-full bg-slate-900 text-white py-5 rounded-[2rem] font-black text-lg hover:bg-indigo-600 transition-all">
+                <button type="submit" class="w-full bg-slate-900 text-white py-5 rounded-[2rem] font-black text-lg hover:bg-indigo-600 transition-all">
                     Search Results
                 </button>
-                {% endif %}
-
             </form>
-            <!-- FORM END -->
+            {% endif %}
 
         </div>
-
     </div>
-
 </div>
-
 {% endblock %}

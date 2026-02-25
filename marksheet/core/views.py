@@ -40,10 +40,20 @@ def loginView(request):
         if user:
             try:
                 school = user.school
+                if str(school.state.id) != str(state_id):
+                    return render(request, "institute/login.html", {
+                        "state": state,
+                        "error": "Invalid state for this school account."
+                    })
+                    
                 if not school.is_verified:
                     return redirect('adminapproval')
+                
             except School.DoesNotExist:
-                pass
+                return render(request, "institute/login.html", {
+                    "state": state,
+                    "error": "This user is not a school account."
+                })
 
             login(request, user)
             return redirect('dashboard')
@@ -200,15 +210,33 @@ def showResult(request):
         return redirect("state")
 
     state_id = request.POST.get("state_id")
+    school_id = request.POST.get("school_id")
+    class_id = request.POST.get("class_id")
     student_id = request.POST.get("roll_no")
+    
+    if not student_id:
+        return redirect("result")
 
     student = Student.objects.filter(
         id=student_id,
-        school__state_id=state_id
+        school__state_id=state_id,
+        class_room_id=class_id
     ).first()
 
     if not student:
-        return redirect("state")
+        # Instead of redirecting, return to result page with an error
+        schools = School.objects.filter(state_id=state_id)
+        classrooms = ClassRoom.objects.filter(school_id=school_id) if school_id else None
+
+        return render(request, "result.html", {
+            "schools": schools,
+            "classrooms": classrooms,
+            "students": None,
+            "state_id": state_id,
+            "school_id": school_id,
+            "class_id": class_id,
+            "error": "Roll Number not found. Please try again."
+        })
 
     student_marks = Mark.objects.filter(
         student=student

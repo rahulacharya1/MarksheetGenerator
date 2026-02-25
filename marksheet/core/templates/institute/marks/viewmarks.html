@@ -39,7 +39,7 @@
             </a>
         </div>
 
-        {% regroup marks by classroom as class_list %}
+        {% regroup marks by student.class_room as class_list %}
 
         <div class="sticky top-28 z-30 mb-16">
             <div class="bg-white/90 backdrop-blur-md border border-slate-200 p-3 rounded-[2rem] shadow-2xl shadow-slate-300/40">
@@ -84,13 +84,13 @@
                                 <div class="absolute -right-4 -top-4 w-24 h-24 bg-white/5 rounded-full"></div>
                                 <div class="flex justify-between items-start mb-6">
                                     <div class="w-14 h-14 bg-emerald-500/20 border border-emerald-500/30 rounded-2xl flex items-center justify-center font-black text-2xl text-emerald-400">
-                                        {{ student_entry.grouper.studentName|slice:":1" }}
+                                        {{ student_entry.grouper.student_name|slice:":1" }}
                                     </div>
                                     <span class="text-[10px] font-black bg-white/10 px-3 py-1.5 rounded-full uppercase tracking-widest border border-white/10">
                                         Roll #{{ student_entry.grouper.roll_no }}
                                     </span>
                                 </div>
-                                <h3 class="text-xl font-black truncate tracking-tight">{{ student_entry.grouper.studentName }}</h3>
+                                <h3 class="text-xl font-black truncate tracking-tight">{{ student_entry.grouper.student_name }}</h3>
                                 <p class="text-emerald-400/80 text-[10px] font-bold uppercase tracking-[0.2em] mt-1">Verified Candidate</p>
                             </div>
 

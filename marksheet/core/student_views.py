@@ -44,7 +44,7 @@ def addStudents(request):
         Student.objects.create(
             school=school,
             class_room=classroom,
-            studentName=studentname,
+            student_name=studentname,
             roll_no=roll,
             dob=dob
         )

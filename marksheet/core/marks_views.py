@@ -35,7 +35,6 @@ def addMarks(request):
                     student=student,
                     subject=subject,
                     defaults={
-                        "classroom": selected_class,
                         "marks": marks_value
                     }
                 )
@@ -64,7 +63,11 @@ def viewMarks(request):
 
     marks = Mark.objects.filter(
         student__school=school
-    ).select_related("student", "subject", "classroom").order_by("classroom", "student__studentName")
+    ).select_related("student", "subject", "student__class_room").order_by(
+        "student__class_room__name",
+        "student__class_room__section",
+        "student__roll_no"
+    )
 
     return render(request, "institute/marks/viewmarks.html", {"marks": marks})
 
@@ -82,7 +85,7 @@ def viewResults(request):
         if student:
             student_marks = Mark.objects.filter(
                 student=student
-            ).select_related("subject", "classroom")
+            ).select_related("subject", "student__class_room")
 
             total_obtained = student_marks.aggregate(Sum('marks'))['marks__sum'] or 0
             total_possible = student_marks.count() * 100
@@ -112,7 +115,7 @@ def viewResults(request):
                 "total_possible": total_possible,
                 "percentage": percentage,
                 "grade": grade,
-                "classroom": student_marks.first().classroom if student_marks.exists() else None
+                "classroom": student.class_room
             }
 
             return render(request, "institute/marks/viewresult.html", context)

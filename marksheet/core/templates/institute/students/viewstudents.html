@@ -109,11 +109,11 @@
                             <div class="relative z-10">
                                 <div class="flex items-center gap-4 mb-6">
                                     <div class="w-14 h-14 bg-gradient-to-br from-slate-100 to-slate-200 text-slate-500 rounded-2xl flex items-center justify-center font-black text-xl group-hover:from-cyan-500 group-hover:to-blue-600 group-hover:text-white transition-all duration-500 shadow-inner">
-                                        {{ s.studentName|slice:":1" }}
+                                        {{ s.student_name|slice:":1" }}
                                     </div>
                                     <div>
                                         <h3 class="font-black text-slate-900 group-hover:text-cyan-600 transition-colors truncate w-32 md:w-40">
-                                            {{ s.studentName }}
+                                            {{ s.student_name }}
                                         </h3>
                                         <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">
                                             Roll: #{{ s.roll_no }}
