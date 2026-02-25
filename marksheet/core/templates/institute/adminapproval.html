@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screem pt-40 pb-28 flex items-center justify-center px-4 bg-slate-50/50">
+    <div class="max-w-md w-full">
+        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+            
+            <div class="h-2 bg-indigo-600"></div>
+
+            <div class="p-8 text-center">
+                <div class="w-20 h-20 bg-indigo-50 rounded-2xl flex items-center justify-center mx-auto mb-6 text-indigo-600 ring-4 ring-indigo-50/50">
+                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+
+                <h1 class="text-2xl font-bold text-slate-900 mb-2">Registration Received</h1>
+                <p class="text-slate-500 text-sm leading-relaxed mb-8">
+                    Your account has been successfully registered. To maintain the security of our community, a moderator must manually review your credentials.
+                </p>
+
+                <div class="space-y-4 text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>
+                        </div>
+                        <span class="text-xs font-bold text-slate-400 line-through">Account Created</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <div class="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center animate-pulse">
+                            <span class="text-[10px]">2</span>
+                        </div>
+                        <span class="text-xs font-black text-slate-900 uppercase tracking-wider">Admin Verification</span>
+                        <span class="ml-auto text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded uppercase">Current</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <div class="w-6 h-6 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center border border-slate-200">
+                            <span class="text-[10px]">3</span>
+                        </div>
+                        <span class="text-xs font-bold text-slate-400">Hub Access</span>
+                    </div>
+                </div>
+
+                <div class="mt-10 pt-6 border-t border-slate-50">
+                    <a href="/" class="inline-flex items-center gap-2 text-sm font-bold text-slate-400 hover:text-indigo-600 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                        Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <p class="mt-6 text-center text-xs text-slate-400 font-medium italic">
+            Usually reviewed within 24-48 business hours.
+        </p>
+    </div>
+</div>
+{% endblock %}

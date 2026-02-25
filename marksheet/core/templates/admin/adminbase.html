@@ -24,8 +24,11 @@
             </a>
 
             <div class="flex items-center gap-4">
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Admin Account</p>
-                <a href="" class="w-10 h-10 bg-indigo-50 border border-indigo-100 rounded-xl flex items-center justify-center text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all shadow-sm">
+                <div class="flex flex-col gap-2 items-center">
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Admin Account</p>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">{{ user.username }}</p>
+                </div>
+                <a href="{% url 'admin-dashboard' %}" class="w-10 h-10 bg-indigo-50 border border-indigo-100 rounded-xl flex items-center justify-center text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all shadow-sm">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                     </svg>

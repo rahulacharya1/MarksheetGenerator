@@ -51,3 +51,33 @@ def addSubject(request):
         return redirect(viewSubject)
     return render(request, "admin/addSubject.html")
 
+
+@staff_member_required
+def approve_school(request, school_id):
+    registration = School.objects.filter(id=school_id)
+    if registration.exists():
+        school = registration.first()
+        school.is_verified = 'True'
+        school.save()
+    return redirect('viewInstitute')
+
+
+@staff_member_required
+def remove_school(request, school_id):
+    registration = School.objects.filter(id=school_id)
+    if registration.exists():
+        school = registration.first()
+        school.is_verified = 'False'
+        school.save()
+    return redirect('viewInstitute')
+
+
+@staff_member_required
+def delete_school(request, school_id):
+    registration = School.objects.filter(id=school_id)
+    if registration.exists():
+        school = registration.first()
+        if school.is_verified != "True":
+            school.delete()
+    return redirect('viewInstitute')
+

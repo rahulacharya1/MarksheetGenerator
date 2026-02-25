@@ -34,13 +34,12 @@ class School(models.Model):
     phone = models.CharField(max_length=15)
 
     # Address
-    city = models.CharField(max_length=100)
     state = models.ForeignKey(State, on_delete=models.CASCADE)
     pincode = models.CharField(max_length=10)
 
     # Verification
     registration_certificate = models.FileField(
-        upload_to='school_documents/',
+        upload_to='media/school_documents/',
         null=True,
         blank=True
     )

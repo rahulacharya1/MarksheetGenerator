@@ -24,12 +24,12 @@ def state(request):
 # ---------------- LOGIN ----------------
 def loginView(request):
     state_id = request.GET.get('state')
-    state = None
-    if state_id:
-        try:
-            state = State.objects.get(id=state_id)
-        except State.DoesNotExist:
-            return redirect('state')
+    if not state_id:
+        return redirect('state')
+
+    state = State.objects.filter(id=state_id).first()
+    if not state:
+        return redirect('state')
 
     if request.method == "POST":
         user = authenticate(
@@ -38,6 +38,13 @@ def loginView(request):
             password=request.POST['password']
         )
         if user:
+            try:
+                school = user.school
+                if not school.is_verified:
+                    return redirect('adminapproval')
+            except School.DoesNotExist:
+                pass
+
             login(request, user)
             return redirect('dashboard')
 
@@ -65,7 +72,6 @@ def registerView(request):
 
         email = request.POST.get("official_email")
         phone = request.POST.get("phone")
-        city = request.POST.get("city")
         pincode = request.POST.get("pincode")
 
         admin_name = request.POST.get("admin_name")
@@ -99,6 +105,7 @@ def registerView(request):
             email=email,
             first_name=admin_name
         )
+        user.save()
 
         School.objects.create(
             user=user,
@@ -108,14 +115,11 @@ def registerView(request):
             affiliation_number=affiliation_number,
             official_email=email,
             phone=phone,
-            city=city,
             state=state,
             pincode=pincode,
             registration_certificate=registration_certificate
         )
-
-        login(request, user)
-        return redirect('dashboard')
+        return redirect('adminapproval')
 
     return render(request, "institute/register.html", {"state": state})
 
@@ -126,8 +130,13 @@ def logoutView(request):
     return redirect('home')
 
 
+# ---------------- APPROVAL ----------------
+def approval(request):
+    return render(request, "institute/adminapproval.html")
+
+
 # ---------------- DASHBOARD ----------------
-@login_required
+@login_required(login_url='login')
 def dashboard(request):
     school = School.objects.get(user=request.user)
     state = school.state
@@ -138,7 +147,7 @@ def dashboard(request):
 
 
 # ---------------- PROFILE ----------------
-@login_required
+@login_required(login_url='login')
 def institutionProfile(request):
     school = School.objects.get(user=request.user)
     return render(request, "institute/profile.html", {"school": school})
