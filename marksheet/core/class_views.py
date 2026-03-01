@@ -1,16 +1,19 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import School, ClassRoom
+from .decorators import school_required
 
 
 # ---------------- MANAGE CLASS ----------------
 @login_required
+@school_required
 def manageClass(request):
     return render(request, 'institute/class/manageclass.html')
 
 
 # ---------------- ADD CLASS ----------------
 @login_required
+@school_required
 def addclass(request):
     school = School.objects.get(user=request.user)
 
@@ -58,6 +61,7 @@ def addclass(request):
 
 # ---------------- VIEW CLASS ----------------
 @login_required
+@school_required
 def viewclass(request):
     school = School.objects.get(user=request.user)
     classroom = ClassRoom.objects.filter(school=school)

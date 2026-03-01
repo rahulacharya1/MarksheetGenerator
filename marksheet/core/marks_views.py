@@ -2,16 +2,19 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import *
 from django.db.models import Sum
+from .decorators import school_required
 
 
 # ---------------- MANAGE MARKS ----------------
 @login_required
+@school_required
 def manageMarks(request):
     return render(request, 'institute/marks/managemarks.html')
 
 
 # ---------------- ADD MARKS ----------------
 @login_required
+@school_required
 def addMarks(request):
     school = School.objects.get(user=request.user)
 
@@ -58,6 +61,7 @@ def addMarks(request):
 
 # ---------------- VIEW MARKS ----------------
 @login_required
+@school_required
 def viewMarks(request):
     school = School.objects.get(user=request.user)
 
@@ -73,6 +77,7 @@ def viewMarks(request):
 
 
 @login_required
+@school_required
 def viewResults(request):
     student_id = request.GET.get("student_id")
 

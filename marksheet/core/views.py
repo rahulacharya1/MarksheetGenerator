@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import *
 from django.db.models import Sum
+from .decorators import school_required
 
 
 # ---------------- HOME ----------------
@@ -146,7 +147,8 @@ def approval(request):
 
 
 # ---------------- DASHBOARD ----------------
-@login_required(login_url='login')
+@login_required
+@school_required
 def dashboard(request):
     school = School.objects.get(user=request.user)
     state = school.state
@@ -157,7 +159,8 @@ def dashboard(request):
 
 
 # ---------------- PROFILE ----------------
-@login_required(login_url='login')
+@login_required
+@school_required
 def institutionProfile(request):
     school = School.objects.get(user=request.user)
     return render(request, "institute/profile.html", {"school": school})

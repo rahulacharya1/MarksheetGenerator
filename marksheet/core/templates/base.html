@@ -28,7 +28,9 @@
 
                 <div class="hidden md:flex items-center bg-slate-100/80 p-1 rounded-2xl border border-slate-200/50">
                     <a href="{% url 'home' %}" class="px-6 py-2 text-sm font-black text-slate-600 hover:text-indigo-600 rounded-xl hover:bg-white hover:shadow-sm transition-all duration-300">Home</a>
+                    {% if not user.is_authenticated %}
                     <a href="{% url 'state' %}?type=student" class="px-6 py-2 text-sm font-black text-slate-600 hover:text-indigo-600 rounded-xl hover:bg-white hover:shadow-sm transition-all duration-300">Find Result</a>
+                    {% endif %}
                     <a href="{% url "aboutus" %}" class="px-6 py-2 text-sm font-black text-slate-600 hover:text-indigo-600 rounded-xl hover:bg-white hover:shadow-sm transition-all duration-300">About Us</a>
                 </div>
 
@@ -39,7 +41,7 @@
                                 <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Admin Access</span>
                                 <span class="text-sm font-bold text-slate-900">{{ user.username }}</span>
                             </div>
-                            <a href="{% url 'dashboard' %}" class="relative flex items-center gap-2 bg-slate-900 text-white pl-2 pr-5 py-2 rounded-2xl hover:bg-indigo-600 transition-all duration-300 group shadow-lg shadow-slate-200">
+                            <a href="{% url 'dashboard' %}" class="hidden md:flex relative flex items-center gap-2 bg-slate-900 text-white pl-2 pr-5 py-2 rounded-2xl hover:bg-indigo-600 transition-all duration-300 group shadow-lg shadow-slate-200">
                                 <div class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center font-black text-xs">
                                     {{ user.username|slice:":1"|upper }}
                                 </div>
@@ -48,7 +50,7 @@
                         </div>
                     {% else %}
                         <a href="{% url 'state' %}?type=institute" class="hidden sm:block text-sm font-black text-slate-500 hover:text-indigo-600 transition-colors mr-2">Login</a>
-                        <a href="{% url 'state' %}?type=institute" class="bg-indigo-600 text-white px-6 py-3 rounded-2xl text-sm font-black hover:bg-slate-900 hover:shadow-2xl hover:shadow-indigo-200 transition-all duration-500">
+                        <a href="{% url 'state' %}?type=institute" class="hidden md:flex bg-indigo-600 text-white px-6 py-3 rounded-2xl text-sm font-black hover:bg-slate-900 hover:shadow-2xl hover:shadow-indigo-200 transition-all duration-500">
                             Register School
                         </a>
                     {% endif %}
@@ -64,7 +66,7 @@
             <div id="mobile-drawer" class="hidden md:hidden absolute top-24 inset-x-4 bg-white/95 backdrop-blur-xl rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-slate-100 p-8 flex flex-col gap-3">
                 <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 px-4">Navigation</p>
                 <a href="{% url 'home' %}" class="flex items-center gap-4 p-5 rounded-[1.5rem] bg-slate-50 text-slate-900 font-black">Home</a>
-                <a href="#" class="flex items-center gap-4 p-5 rounded-[1.5rem] text-slate-600 font-bold">Find Results</a>
+                <a href="{% url 'aboutus' %}" class="flex items-center gap-4 p-5 rounded-[1.5rem] bg-slate-50 text-slate-900 font-black">About Us</a>
                 <div class="h-px bg-slate-100 my-2"></div>
                 {% if user.is_authenticated %}
                     <a href="{% url 'dashboard' %}" class="flex items-center justify-center p-5 rounded-[1.5rem] bg-indigo-600 text-white font-black">Dashboard</a>

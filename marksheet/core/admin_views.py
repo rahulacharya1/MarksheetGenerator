@@ -64,10 +64,9 @@ def approve_school(request, school_id):
 
 @staff_member_required
 def remove_school(request, school_id):
-    registration = School.objects.filter(id=school_id)
-    if registration.exists():
-        school = registration.first()
-        school.is_verified = 'False'
+    school = School.objects.filter(id=school_id).first()
+    if school:
+        school.is_verified = False
         school.save()
     return redirect('viewInstitute')
 

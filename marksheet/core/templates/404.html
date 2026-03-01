@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen bg-white flex items-center justify-center px-6">
+    <div class="text-center">
+        <div class="flex justify-center mb-6">
+            <div class="p-4 bg-indigo-50 rounded-3xl">
+                <svg class="w-16 h-16 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 9.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </div>
+        </div>
+
+        <h1 class="text-9xl font-black text-slate-200 tracking-tighter">404</h1>
+        <h2 class="text-3xl font-bold text-slate-900 mt-[-2rem] mb-4">Page Not Found</h2>
+        <p class="text-slate-500 font-medium max-w-md mx-auto mb-10">
+            The page you're looking for doesn't exist or has been moved. 
+            Perhaps the school was removed or the link is broken.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="{% url 'home' %}" class="px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-indigo-600 transition-all shadow-xl shadow-slate-200">
+                Back to Home
+            </a>
+            <button onclick="history.back()" class="px-8 py-4 bg-white border border-slate-200 text-slate-700 rounded-2xl font-bold hover:bg-slate-50 transition-all">
+                Go Back
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
