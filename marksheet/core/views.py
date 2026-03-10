@@ -1,10 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .models import *
 from django.db.models import Sum
-from .decorators import school_required
+from .models import *
 
 
 # ---------------- HOME ----------------
@@ -16,6 +14,7 @@ def home(request):
 def state(request):
     type_param = request.GET.get('type')
     states = State.objects.all()
+
     return render(request, "state.html", {
         "states": states,
         "type": type_param
@@ -24,40 +23,62 @@ def state(request):
 
 # ---------------- LOGIN ----------------
 def loginView(request):
+
     state_id = request.GET.get('state')
+
     if not state_id:
         return redirect('state')
 
     state = State.objects.filter(id=state_id).first()
+
     if not state:
         return redirect('state')
 
     if request.method == "POST":
+
         user = authenticate(
             request,
             username=request.POST['username'],
             password=request.POST['password']
         )
+
         if user:
-            try:
+
+            # ---------- PRINCIPAL LOGIN ----------
+            if hasattr(user, "school"):
+
                 school = user.school
+
                 if str(school.state.id) != str(state_id):
                     return render(request, "institute/login.html", {
                         "state": state,
                         "error": "Invalid state for this school account."
                     })
-                    
+
                 if not school.is_verified:
                     return redirect('adminapproval')
-                
-            except School.DoesNotExist:
-                return render(request, "institute/login.html", {
-                    "state": state,
-                    "error": "This user is not a school account."
-                })
 
-            login(request, user)
-            return redirect('dashboard')
+                login(request, user)
+                return redirect("principaldashboard")
+
+            # ---------- TEACHER LOGIN ----------
+            if hasattr(user, "teacher"):
+
+                teacher = user.teacher
+
+                if str(teacher.school.state.id) != str(state_id):
+                    return render(request, "institute/login.html", {
+                        "state": state,
+                        "error": "Invalid state for this teacher account."
+                    })
+
+                login(request, user)
+                return redirect("teacherdashboard")
+
+        return render(request, "institute/login.html", {
+            "state": state,
+            "error": "Invalid username or password"
+        })
 
     return render(request, "institute/login.html", {
         "state": state
@@ -66,16 +87,19 @@ def loginView(request):
 
 # ---------------- REGISTER ----------------
 def registerView(request):
+
     state_id = request.GET.get('state')
+
     if not state_id:
         return redirect('state')
 
     state = State.objects.filter(id=state_id).first()
+
     if not state:
         return redirect('state')
 
     if request.method == "POST":
-        
+
         school_name = request.POST.get("school_name")
         established_year = request.POST.get("established_year")
         board = request.POST.get("board")
@@ -116,7 +140,6 @@ def registerView(request):
             email=email,
             first_name=admin_name
         )
-        user.save()
 
         School.objects.create(
             user=user,
@@ -130,6 +153,7 @@ def registerView(request):
             pincode=pincode,
             registration_certificate=registration_certificate
         )
+
         return redirect('adminapproval')
 
     return render(request, "institute/register.html", {"state": state})
@@ -141,32 +165,7 @@ def logoutView(request):
     return redirect('home')
 
 
-# ---------------- APPROVAL ----------------
-def approval(request):
-    return render(request, "institute/adminapproval.html")
-
-
-# ---------------- DASHBOARD ----------------
-@login_required
-@school_required
-def dashboard(request):
-    school = School.objects.get(user=request.user)
-    state = school.state
-    return render(request, "institute/dashboard.html", {
-        "school": school,
-        "state": state
-    })
-
-
-# ---------------- PROFILE ----------------
-@login_required
-@school_required
-def institutionProfile(request):
-    school = School.objects.get(user=request.user)
-    return render(request, "institute/profile.html", {"school": school})
-
-
-# ---------------- ABOUT US ----------------
+# ---------------- ABOUT ----------------
 def aboutUs(request):
     return render(request, 'about.html')
 
@@ -176,8 +175,14 @@ def documentation(request):
     return render(request, 'institute/documentation.html')
 
 
+# ---------------- APPROVAL ----------------
+def approval(request):
+    return render(request, "institute/adminapproval.html")
+
+
 # ---------------- RESULT ----------------
 def result(request):
+
     state_id = request.GET.get("state")
 
     if not state_id:
@@ -209,6 +214,7 @@ def result(request):
 
 # ---------------- SHOW RESULT ----------------
 def showResult(request):
+
     if request.method != "POST":
         return redirect("state")
 
@@ -216,9 +222,6 @@ def showResult(request):
     school_id = request.POST.get("school_id")
     class_id = request.POST.get("class_id")
     student_id = request.POST.get("roll_no")
-    
-    if not student_id:
-        return redirect("result")
 
     student = Student.objects.filter(
         id=student_id,
@@ -227,29 +230,20 @@ def showResult(request):
     ).first()
 
     if not student:
-        # Instead of redirecting, return to result page with an error
-        schools = School.objects.filter(state_id=state_id)
-        classrooms = ClassRoom.objects.filter(school_id=school_id) if school_id else None
-
-        return render(request, "result.html", {
-            "schools": schools,
-            "classrooms": classrooms,
-            "students": None,
-            "state_id": state_id,
-            "school_id": school_id,
-            "class_id": class_id,
-            "error": "Roll Number not found. Please try again."
-        })
+        return redirect("result")
 
     student_marks = Mark.objects.filter(
         student=student
-    ).select_related("subject")
+    ).select_related("exam")
 
     total_obtained = student_marks.aggregate(Sum('marks'))['marks__sum'] or 0
     total_possible = student_marks.count() * 100
-    percentage = (total_obtained / total_possible * 100) if total_possible > 0 else 0
-    percentage = round(percentage, 1)
 
+    percentage = 0
+    if total_possible > 0:
+        percentage = round((total_obtained / total_possible) * 100, 1)
+
+    # -------- GRADE SYSTEM --------
     if percentage >= 90:
         grade = "A+"
     elif percentage >= 80:

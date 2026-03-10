@@ -32,7 +32,7 @@
                 </div>
 
                 <div class="flex flex-col gap-3">
-                    <a href="{% url 'addState' %}" class="flex items-center justify-between px-5 py-3 bg-slate-900 text-white rounded-2xl text-sm font-bold hover:bg-indigo-600 transition-all group">
+                    <a href="{% url 'addstate' %}" class="flex items-center justify-between px-5 py-3 bg-slate-900 text-white rounded-2xl text-sm font-bold hover:bg-indigo-600 transition-all group">
                         Add New State
                         <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none"
                             stroke="currentColor" viewBox="0 0 24 24">
@@ -40,46 +40,9 @@
                             </path>
                         </svg>
                     </a>
-                    <a href="{% url 'viewState' %}" class="flex items-center justify-between px-5 py-3 bg-white border border-slate-200 text-slate-700 rounded-2xl text-sm font-bold hover:bg-slate-50 transition-all">
+                    <a href="{% url 'viewstate' %}" class="flex items-center justify-between px-5 py-3 bg-white border border-slate-200 text-slate-700 rounded-2xl text-sm font-bold hover:bg-slate-50 transition-all">
                         View Existing States
                         <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
-                            </path>
-                        </svg>
-                    </a>
-                </div>
-            </div>
-
-            <div class="max-w-sm bg-white border border-slate-200 p-8 rounded-[2.5rem] shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow duration-300">
-                <div>
-                    <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mb-6">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253">
-                            </path>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-bold text-slate-900 mb-2">Subject Management</h3>
-                    <p class="text-sm text-slate-500 mb-8 leading-relaxed">
-                        Configure curriculum subjects, assign credits, and manage department categories.
-                    </p>
-                </div>
-
-                <div class="flex flex-col gap-3">
-                    <a href="{% url 'addSubject' %}" class="group flex items-center justify-between px-5 py-3 bg-slate-900 text-white rounded-2xl text-sm font-bold hover:bg-emerald-600 transition-all duration-300">
-                        <span>Add New Subjects</span>
-                        <div class="bg-white/20 rounded-lg p-1 group-hover:bg-white/30 transition-colors">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                    d="M12 4v16m8-8H4"></path>
-                            </svg>
-                        </div>
-                    </a>
-
-                    <a href="{% url 'viewSubject' %}" class="flex items-center justify-between px-5 py-3 bg-white border border-slate-200 text-slate-700 rounded-2xl text-sm font-bold hover:bg-slate-50 hover:border-slate-300 transition-all duration-300">
-                        <span>View Existing Subjects</span>
-                        <svg class="w-4 h-4 text-slate-400 group-hover:text-slate-600" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
                             </path>
                         </svg>
@@ -101,7 +64,7 @@
                         network.</p>
                 </div>
 
-                <a href="{% url 'viewInstitute' %}" class="flex items-center justify-center gap-3 px-5 py-4 bg-indigo-50 text-indigo-600 rounded-2xl text-sm font-black uppercase tracking-widest hover:bg-indigo-600 hover:text-white transition-all shadow-sm">
+                <a href="{% url 'viewinstitute' %}" class="flex items-center justify-center gap-3 px-5 py-4 bg-indigo-50 text-indigo-600 rounded-2xl text-sm font-black uppercase tracking-widest hover:bg-indigo-600 hover:text-white transition-all shadow-sm">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>

@@ -55,7 +55,7 @@
 
             <!-- STEP 3: Roll Number & Submit (POST method) -->
             {% if class_id %}
-            <form action="{% url 'showResult' %}" method="post" class="space-y-6">
+            <form action="{% url 'showresult' %}" method="post" class="space-y-6">
                 {% csrf_token %}
                 <input type="hidden" name="state_id" value="{{ state_id }}">
                 <input type="hidden" name="school_id" value="{{ school_id }}">

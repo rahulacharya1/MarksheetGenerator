@@ -52,10 +52,10 @@
 
                     <div class="flex gap-2 border-t border-slate-50 pt-4 mt-2">
                         {% if school.is_verified %}
-                            <a href="{% url 'remove_school' school.id %}" class="flex-1 text-center py-2 text-[11px] font-bold text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors border border-transparent">Revoke</a>
+                            <a href="{% url 'removeschool' school.id %}" class="flex-1 text-center py-2 text-[11px] font-bold text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors border border-transparent">Revoke</a>
                         {% else %}
-                            <a href="{% url 'approve_school' school.id %}" class="flex-1 text-center py-2 text-[11px] font-bold bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 shadow-sm transition-all">Approve</a>
-                            <a href="{% url 'delete_school' school.id %}" class="flex-1 text-center py-2 text-[11px] font-bold text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">Delete</a>
+                            <a href="{% url 'approveschool' school.id %}" class="flex-1 text-center py-2 text-[11px] font-bold bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 shadow-sm transition-all">Approve</a>
+                            <a href="{% url 'deleteschool' school.id %}" class="flex-1 text-center py-2 text-[11px] font-bold text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">Delete</a>
                         {% endif %}
                     </div>
                 </div>

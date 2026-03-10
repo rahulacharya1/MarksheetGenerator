@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+</style>
+
+<div class="min-h-screen bg-[#fafafa] pt-32 pb-24 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-12">
+            <div class="space-y-4">
+                <nav class="flex mb-4 items-center gap-2 text-sm font-medium text-slate-400">
+                    <a href="{% url 'principaldashboard' %}" class="hover:text-indigo-600 transition-colors">Dashboard</a>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M9 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <a href="{% url 'manageteachers' %}" class="hover:text-indigo-600 transition-colors">Management</a>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M9 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="text-slate-900">Faculty Directory</span>
+                </nav>
+                <h1 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter leading-none">
+                    Faculty <span class="text-indigo-600">Directory</span>
+                </h1>
+                <p class="text-slate-500 font-medium text-sm">
+                    Verified Staff for <span class="text-slate-800 font-bold border-b-2 border-indigo-100">{{ school.school_name }}</span>
+                </p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-center gap-4 w-full lg:w-auto">
+                <form method="GET" class="relative w-full sm:w-64 group">
+                    <label class="absolute -top-6 left-1 text-[9px] font-black text-slate-400 uppercase tracking-widest">Filter by Session</label>
+                    <select name="year" onchange="this.form.submit()" 
+                        class="w-full bg-white border border-slate-200 rounded-2xl px-5 py-3.5 text-sm font-bold text-slate-700 appearance-none focus:ring-4 focus:ring-indigo-500/5 focus:border-indigo-500 transition-all cursor-pointer shadow-sm">
+                        {% for yr in academic_years %}
+                            <option value="{{ yr.id }}" {% if selected_year.id == yr.id %}selected{% endif %}>
+                                Session: {{ yr.year }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <div class="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                        <i class="fas fa-filter text-xs"></i>
+                    </div>
+                </form>
+
+                <a href="{% url 'addteachers' %}"
+                   class="w-full sm:w-auto bg-slate-900 text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-indigo-600 transition-all flex items-center justify-center gap-3 shadow-xl shadow-slate-200">
+                    <i class="fas fa-user-plus"></i>
+                    Onboard Teacher
+                </a>
+            </div>
+        </div>
+
+        {% if teachers %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                {% for teacher in teachers %}
+                <div class="group bg-white border border-slate-200 rounded-[2.5rem] p-8 hover:shadow-2xl hover:shadow-indigo-500/10 hover:border-indigo-500/50 transition-all duration-500 relative overflow-hidden">
+                    
+                    <div class="flex items-start justify-between mb-8 relative z-10">
+                        <div class="w-16 h-16 bg-slate-900 text-white rounded-2xl flex items-center justify-center font-black text-2xl shadow-lg shadow-slate-200 group-hover:bg-indigo-600 transition-all duration-500">
+                            {{ teacher.user.first_name|slice:":1"|upper }}
+                        </div>
+                        <span class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-500 text-[8px] font-black uppercase tracking-widest border border-emerald-500/10">
+                            <span class="w-1 h-1 rounded-full bg-emerald-500 animate-pulse"></span>
+                            Verified
+                        </span>
+                    </div>
+
+                    <div class="relative z-10 mb-8">
+                        <h3 class="text-xl font-black text-slate-900 tracking-tighter leading-tight group-hover:text-indigo-600 transition-colors">
+                            {{ teacher.user.first_name }}
+                        </h3>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em] mt-1">
+                            ID: @{{ teacher.user.username }}
+                        </p>
+                    </div>
+
+                    <div class="relative z-10 pt-6 border-t border-slate-50 flex items-center justify-between">
+                        <div>
+                            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Assigned Node</p>
+                            <div class="mt-1 flex items-center gap-2">
+                                <span class="w-6 h-6 bg-indigo-50 text-indigo-600 rounded-lg flex items-center justify-center text-[10px] font-black">
+                                    {{ teacher.classroom.name }}
+                                </span>
+                                <span class="text-xs font-bold text-slate-700">Section {{ teacher.classroom.section }}</span>
+                            </div>
+                        </div>
+                        <button class="w-8 h-8 rounded-full bg-slate-50 text-slate-400 hover:bg-indigo-600 hover:text-white transition-all flex items-center justify-center">
+                            <i class="fas fa-ellipsis-v text-[10px]"></i>
+                        </button>
+                    </div>
+
+                    <div class="absolute -right-8 -top-8 w-24 h-24 bg-slate-50 rounded-full group-hover:bg-indigo-50 transition-colors duration-500"></div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-32 bg-white rounded-[4rem] border border-slate-100 shadow-sm">
+                <div class="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-8">
+                    <i class="fas fa-user-slash text-slate-200 text-4xl"></i>
+                </div>
+                <h3 class="text-xl font-black text-slate-900 uppercase tracking-widest">Null Faculty</h3>
+                <p class="text-slate-400 text-sm font-medium mt-2 mb-8">No teachers assigned to classrooms for the {{ selected_year.year }} session.</p>
+                <a href="{% url 'addteachers' %}" class="px-10 py-4 bg-indigo-600 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-slate-900 transition-all">
+                    Register First Teacher
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

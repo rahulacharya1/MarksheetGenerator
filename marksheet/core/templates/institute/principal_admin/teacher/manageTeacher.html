@@ -6,59 +6,59 @@
     <div class="max-w-5xl mx-auto">
         
         <nav class="flex mb-8 items-center gap-2 text-sm font-medium text-slate-400">
-            <a href="{% url 'dashboard' %}" class="hover:text-indigo-600 transition-colors">Dashboard</a>
+            <a href="{% url 'principaldashboard' %}" class="hover:text-indigo-600 transition-colors">Dashboard</a>
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span class="text-slate-900">Class Management</span>
+            <span class="text-slate-900">Faculty Management</span>
         </nav>
 
         <div class="mb-12">
             <h1 class="text-3xl md:text-4xl font-black text-slate-900 tracking-tight mb-3">
-                Manage <span class="text-indigo-600">Class</span>
+                Manage <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-blue-500">Teachers</span>
             </h1>
-            <p class="text-slate-500 text-lg max-w-2xl">
-                Organize your institution by defining classes and sections. This structure is required before registering students.
+            <p class="text-slate-500 text-lg max-w-2xl font-medium">
+                Administer your institution's faculty. Create teacher profiles, assign academic roles, and manage classroom access.
             </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             
-            <a href="{% url 'viewclass' %}" class="group relative bg-white border border-slate-200 rounded-[2.5rem] p-10 transition-all duration-500 hover:border-indigo-500 hover:shadow-2xl hover:shadow-indigo-100">
+            <a href="{% url 'viewteachers' %}" class="group relative bg-white border border-slate-200 rounded-[2.5rem] p-10 transition-all duration-500 hover:border-indigo-500 hover:shadow-2xl hover:shadow-indigo-100">
                 <div class="flex flex-col h-full">
                     <div class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-3xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-500">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                         </svg>
                     </div>
                     
-                    <h2 class="text-2xl font-bold text-slate-900 mb-3 group-hover:text-indigo-600 transition-colors">View Directory</h2>
+                    <h2 class="text-2xl font-bold text-slate-900 mb-3 group-hover:text-indigo-600 transition-colors">Teacher Directory</h2>
                     <p class="text-slate-500 leading-relaxed mb-8">
-                        Access and edit the full list of classes currently active in your institution.
+                        Browse the complete faculty list, update personal details, and manage active status for all teachers.
                     </p>
                     
-                    <div class="mt-auto flex items-center gap-2 text-indigo-600 font-bold">
-                        Browse List 
+                    <div class="mt-auto flex items-center gap-2 text-indigo-600 font-bold uppercase text-xs tracking-widest">
+                        Browse Profiles 
                         <svg class="w-5 h-5 transform group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                     </div>
                 </div>
             </a>
 
-            <a href="{% url 'addclass' %}" class="group relative bg-slate-900 rounded-[2.5rem] p-10 transition-all duration-500 hover:shadow-2xl hover:shadow-slate-300">
+            <a href="{% url 'addteachers' %}" class="group relative bg-slate-900 rounded-[2.5rem] p-10 transition-all duration-500 hover:shadow-2xl hover:shadow-slate-300">
                 <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl group-hover:bg-indigo-500/20 transition-colors"></div>
                 
                 <div class="flex flex-col h-full relative z-10">
                     <div class="w-16 h-16 bg-white/10 text-white rounded-3xl flex items-center justify-center mb-8 group-hover:rotate-12 transition-transform duration-500">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                         </svg>
                     </div>
                     
-                    <h2 class="text-2xl font-bold text-white mb-3">Create New</h2>
+                    <h2 class="text-2xl font-bold text-white mb-3">Onboard Faculty</h2>
                     <p class="text-slate-400 leading-relaxed mb-8">
-                        Initialize a new class category and assign sections to expand your database.
+                        Register a new teacher to the system, set their credentials, and prepare their institutional ID.
                     </p>
                     
-                    <div class="mt-auto flex items-center gap-2 text-white font-bold bg-indigo-600 self-start px-6 py-3 rounded-2xl hover:bg-indigo-500 transition-colors shadow-lg shadow-indigo-900/40">
-                        Add Entry
+                    <div class="mt-auto flex items-center gap-2 text-white font-black uppercase text-[10px] tracking-widest bg-indigo-600 self-start px-8 py-4 rounded-2xl hover:bg-indigo-500 transition-colors shadow-xl shadow-indigo-900/40">
+                        Create Account
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                     </div>
                 </div>
@@ -66,13 +66,13 @@
 
         </div>
 
-        <div class="mt-12 p-6 bg-blue-50 border border-blue-100 rounded-2xl flex items-start gap-4">
-            <div class="text-blue-600 mt-1">
+        <div class="mt-12 p-6 bg-indigo-50 border border-indigo-100 rounded-[2rem] flex items-start gap-4">
+            <div class="text-indigo-600 mt-1">
                 <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
             </div>
             <div>
-                <h4 class="text-blue-900 font-bold text-sm">Pro Tip</h4>
-                <p class="text-blue-700 text-sm">Always ensure your class names follow a consistent naming convention (e.g., "Grade 10-A") to make searching easier later.</p>
+                <h4 class="text-indigo-900 font-bold text-sm uppercase tracking-wider">Administrative Tip</h4>
+                <p class="text-indigo-700/80 text-sm font-medium mt-1">When creating a new teacher account, ensure the email address is accurate. The system will use this for secure login and automatic classroom notifications.</p>
             </div>
         </div>
 
@@ -80,4 +80,3 @@
     
 </div>
 {% endblock %}
-

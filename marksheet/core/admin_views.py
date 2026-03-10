@@ -1,82 +1,87 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.admin.views.decorators import staff_member_required
-from .models import State, School, Subject
+from .models import State, School
 
 
+# ---------------- ADMIN DASHBOARD ----------------
 @staff_member_required
-def admin_dashboard (request):
+def adminDashboard(request):
     return render(request, "admin/dashboard.html")
 
 
+# ---------------- ADD STATE ----------------
 @staff_member_required
-def addState (request):
+def addState(request):
+
     if request.method == "POST":
+
         name = request.POST.get("name")
-        State.objects.create(
-            name = name
-        )
-        return redirect(viewState)
+
+        if name:
+            State.objects.create(name=name)
+
+        return redirect("viewstate")
+
     return render(request, "admin/addState.html")
 
 
+# ---------------- VIEW STATE ----------------
 @staff_member_required
 def viewState(request):
+
     states = State.objects.all()
-    return render(request, "admin/viewState.html", {"states":states})
 
-
-@staff_member_required
-def viewInstitute(request):
-    state = State.objects.all()
-    schools = School.objects.all()
-    return render(request, "admin/viewInstitute.html", {
-        "states":state,
-        "schools":schools
+    return render(request, "admin/viewState.html", {
+        "states": states
     })
 
 
+# ---------------- VIEW INSTITUTE ----------------
 @staff_member_required
-def viewSubject(request):
-    subject = Subject.objects.all()
-    return render(request, "admin/viewSubject.html", {"subjects":subject})
+def viewInstitute(request):
+
+    states = State.objects.all()
+
+    schools = School.objects.all()
+
+    return render(request, "admin/viewInstitute.html", {
+        "states": states,
+        "schools": schools
+    })
 
 
+# ---------------- APPROVE SCHOOL ----------------
 @staff_member_required
-def addSubject(request):
-    if request.method == "POST":
-        name = request.POST.get("name")
-        Subject.objects.create(
-            name = name
-        )
-        return redirect(viewSubject)
-    return render(request, "admin/addSubject.html")
+def approveSchool(request, school_id):
+
+    school = get_object_or_404(School, id=school_id)
+
+    school.is_verified = True
+    school.save()
+
+    return redirect("viewinstitute")
 
 
+# ---------------- REMOVE SCHOOL APPROVAL ----------------
 @staff_member_required
-def approve_school(request, school_id):
-    registration = School.objects.filter(id=school_id)
-    if registration.exists():
-        school = registration.first()
-        school.is_verified = 'True'
-        school.save()
-    return redirect('viewInstitute')
+def removeSchool(request, school_id):
+
+    school = get_object_or_404(School, id=school_id)
+
+    school.is_verified = False
+    school.save()
+
+    return redirect("viewinstitute")
 
 
+# ---------------- DELETE SCHOOL ----------------
 @staff_member_required
-def remove_school(request, school_id):
-    school = School.objects.filter(id=school_id).first()
-    if school:
-        school.is_verified = False
-        school.save()
-    return redirect('viewInstitute')
+def deleteSchool(request, school_id):
 
+    school = get_object_or_404(School, id=school_id)
 
-@staff_member_required
-def delete_school(request, school_id):
-    registration = School.objects.filter(id=school_id)
-    if registration.exists():
-        school = registration.first()
-        if school.is_verified != "True":
-            school.delete()
-    return redirect('viewInstitute')
+    if not school.is_verified:
+        school.delete()
+
+    return redirect("viewinstitute")
 

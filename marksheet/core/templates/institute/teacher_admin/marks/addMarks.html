@@ -6,8 +6,10 @@
     <div class="max-w-5xl mx-auto">
         
         <div class="flex items-center mb-10">
-            <a href="{% url 'managemarks' %}" class="group flex items-center gap-2 text-slate-500 hover:text-indigo-600 font-semibold transition-colors">
-                <svg class="w-5 h-5 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            <a href="{% url 'managemarks' %}" class="group flex items-center gap-2 text-slate-500 hover:text-indigo-600 font-black uppercase text-[10px] tracking-[0.2em] transition-colors">
+                <svg class="w-4 h-4 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"/>
+                </svg>
                 Back to Management
             </a>
         </div>
@@ -24,32 +26,10 @@
                     Select a classroom and student to record academic performance. Accuracy is paramount for final grading.
                 </p>
             </div>
-
-            <div class="w-full md:w-72">
-                <form method="get" id="classForm">
-                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 ml-1">Classroom Selection</label>
-                    <div class="relative group">
-                        <select name="classroom" required onchange="this.form.submit()" 
-                            class="w-full appearance-none bg-white border border-slate-200 text-slate-900 font-bold text-sm rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 block p-4 transition-all cursor-pointer shadow-sm group-hover:border-slate-300">
-                            <option value="">-- Choose Classroom --</option>
-                            {% for c in classes %}
-                                <option value="{{ c.id }}" {% if selected_class and c.id == selected_class.id %}selected{% endif %}>
-                                    Class {{ c.name }} • {{ c.section }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                        <div class="absolute inset-y-0 right-4 flex items-center pointer-events-none text-slate-400">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                        </div>
-                    </div>
-                </form>
-            </div>
         </div>
 
-        {% if students %}
         <form method="post">
             {% csrf_token %}
-            <input type="hidden" name="classroom" value="{{ selected_class.id }}">
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                 
@@ -60,7 +40,7 @@
                         </div>
                         <h3 class="text-xl font-bold mb-6">Select Student</h3>
                         
-                        <div class="space-y-4">
+                        <div>
                             <select name="student" required class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-white font-medium">
                                 {% for s in students %}
                                     <option value="{{ s.id }}" class="text-slate-900">
@@ -68,10 +48,6 @@
                                     </option>
                                 {% endfor %}
                             </select>
-                            <div class="p-4 bg-white/5 rounded-2xl border border-white/5">
-                                <p class="text-xs text-slate-400 uppercase tracking-widest font-bold mb-1">Target Class</p>
-                                <p class="text-lg font-bold">{{ selected_class.name }} - {{ selected_class.section }}</p>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -88,10 +64,10 @@
                             <div class="group flex items-center justify-between p-6 bg-slate-50 rounded-3xl border border-transparent hover:border-indigo-200 hover:bg-white hover:shadow-xl hover:shadow-indigo-50 transition-all duration-300">
                                 <div class="flex items-center gap-5">
                                     <div class="w-12 h-12 flex items-center justify-center rounded-2xl bg-white text-slate-400 font-black text-sm border border-slate-100 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300">
-                                        {{ subject.name|slice:":2"|upper }}
+                                        {{ subject.subject|slice:":2"|upper }}
                                     </div>
                                     <div>
-                                        <h4 class="font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">{{ subject.name }}</h4>
+                                        <h4 class="font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">{{ subject.subject }}</h4>
                                         <p class="text-xs text-slate-400 font-medium">Mandatory Field</p>
                                     </div>
                                 </div>
@@ -120,17 +96,6 @@
                 </div>
             </div>
         </form>
-        {% else %}
-            {% if selected_class %}
-            <div class="text-center p-20 bg-white border border-slate-200 rounded-[2.5rem]">
-                <div class="w-20 h-20 bg-slate-50 text-slate-300 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-width="2" stroke-linecap="round"/></svg>
-                </div>
-                <h3 class="text-xl font-bold text-slate-900 mb-2">No Students Found</h3>
-                <p class="text-slate-500">There are no students enrolled in Class {{ selected_class.name }}.</p>
-            </div>
-            {% endif %}
-        {% endif %}
 
     </div>
 
