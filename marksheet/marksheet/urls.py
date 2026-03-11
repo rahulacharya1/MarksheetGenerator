@@ -42,6 +42,10 @@ urlpatterns = [
     
     path('teacher-dashboard/', teacherDashboard, name="teacherdashboard"),
     
+    path('manage-exams/', manageExams, name="manageexams"),
+    path('add-exams/', addExams, name="addexams"),
+    path('view-exams/', viewExams, name="viewexams"),
+    
     path('manage-subjects/', manageSubjects, name="managesubjects"),
     path('add-subjects/', addSubjects, name="addsubjects"),
     path('view-subjects/', viewSubjects, name="viewsubjects"),

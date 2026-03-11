@@ -109,6 +109,8 @@ class MarkAdmin(admin.ModelAdmin):
         "student__student_name",
     )
     
+    
+# ---------------- CLASSSUBJECT ----------------
 @admin.register(ClassSubject)
 class ClassSubjectAdmin(admin.ModelAdmin):
 
@@ -120,6 +122,4 @@ class ClassSubjectAdmin(admin.ModelAdmin):
     list_filter = (
         "classroom",
     )
-    
-    
     

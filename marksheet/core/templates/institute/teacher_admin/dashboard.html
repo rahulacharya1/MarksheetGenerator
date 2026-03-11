@@ -30,33 +30,53 @@
 
         <div class="mb-10">
             <h2 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-8 px-1">Classroom Management</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
 
                 <a href="{% url 'managesubjects' %}" class="group relative bg-white border border-slate-200 rounded-[2.5rem] p-10 transition-all duration-500 hover:border-indigo-500 hover:shadow-2xl hover:shadow-indigo-100 hover:-translate-y-2">
-                    <div class="absolute top-8 right-10 text-slate-50 group-hover:text-indigo-50 transition-colors font-black text-6xl">01</div>
-                    <div class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-500 shadow-sm">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                    <div class="absolute top-8 right-10 text-slate-100/60 group-hover:text-indigo-50 transition-colors font-black text-6xl select-none z-0">01</div>
+                    <div class="relative z-10">
+                        <div class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-500 shadow-sm">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-black text-slate-900 mb-3 uppercase tracking-tight">Curriculum</h3>
+                        <p class="text-sm text-slate-500 font-medium leading-relaxed">Define and manage subjects for your assigned classroom node.</p>
                     </div>
-                    <h3 class="text-xl font-black text-slate-900 mb-3 uppercase tracking-tight">Curriculum</h3>
-                    <p class="text-sm text-slate-500 font-medium leading-relaxed">Define and manage subjects for your assigned classroom node.</p>
                 </a>
-                
-                <a href="{% url 'managestudents' %}" class="group relative bg-white border border-slate-200 rounded-[2.5rem] p-10 transition-all duration-500 hover:border-cyan-500 hover:shadow-2xl hover:shadow-cyan-100 hover:-translate-y-2">
-                    <div class="absolute top-8 right-10 text-slate-50 group-hover:text-cyan-50 transition-colors font-black text-6xl">02</div>
-                    <div class="w-16 h-16 bg-cyan-50 text-cyan-600 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-cyan-600 group-hover:text-white transition-all duration-500 shadow-sm">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+
+                <a href="{% url 'manageexams' %}" class="group relative bg-white border border-slate-200 rounded-[2.5rem] p-10 transition-all duration-500 hover:border-indigo-500 hover:shadow-2xl hover:shadow-indigo-100 hover:-translate-y-2">
+                    <div class="absolute top-8 right-10 text-slate-100/60 group-hover:text-indigo-50 transition-colors font-black text-6xl select-none z-0">02</div>
+                    <div class="relative z-10">
+                        <div class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-500 shadow-sm">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-black text-slate-900 mb-3 uppercase tracking-tight">Exam Cycles</h3>
+                        <p class="text-sm text-slate-500 font-medium leading-relaxed">Configure <b>Half-Yearly</b> and <b>Final</b> exam sessions for academic tracking.</p>
                     </div>
-                    <h3 class="text-xl font-black text-slate-900 mb-3 uppercase tracking-tight">Student Body</h3>
-                    <p class="text-sm text-slate-500 font-medium leading-relaxed">Enroll students and organize the primary classroom registry.</p>
+                </a>
+
+                <a href="{% url 'managestudents' %}" class="group relative bg-white border border-slate-200 rounded-[2.5rem] p-10 transition-all duration-500 hover:border-cyan-500 hover:shadow-2xl hover:shadow-cyan-100 hover:-translate-y-2">
+                    <div class="absolute top-8 right-10 text-slate-100/60 group-hover:text-cyan-50 transition-colors font-black text-6xl select-none z-0">03</div>
+                    <div class="relative z-10">
+                        <div class="w-16 h-16 bg-cyan-50 text-cyan-600 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-cyan-600 group-hover:text-white transition-all duration-500 shadow-sm">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-black text-slate-900 mb-3 uppercase tracking-tight">Student Body</h3>
+                        <p class="text-sm text-slate-500 font-medium leading-relaxed">Enroll students and organize the primary classroom registry.</p>
+                    </div>
                 </a>
 
                 <a href="{% url 'managemarks' %}" class="group relative bg-white border border-slate-200 rounded-[2.5rem] p-10 transition-all duration-500 hover:border-emerald-500 hover:shadow-2xl hover:shadow-emerald-100 hover:-translate-y-2">
-                    <div class="absolute top-8 right-10 text-slate-50 group-hover:text-emerald-50 transition-colors font-black text-6xl">03</div>
-                    <div class="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-500 shadow-sm">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 022 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+                    <div class="absolute top-8 right-10 text-slate-100/60 group-hover:text-emerald-50 transition-colors font-black text-6xl select-none z-0">04</div>
+                    <div class="relative z-10">
+                        <div class="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-500 shadow-sm">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-black text-slate-900 mb-3 uppercase tracking-tight">Performance</h3>
+                        <p class="text-sm text-slate-500 font-medium leading-relaxed">Record academic scores and analyze examination performance data.</p>
                     </div>
-                    <h3 class="text-xl font-black text-slate-900 mb-3 uppercase tracking-tight">Marks Entry</h3>
-                    <p class="text-sm text-slate-500 font-medium leading-relaxed">Record academic performance for examination cycles.</p>
                 </a>
 
             </div>

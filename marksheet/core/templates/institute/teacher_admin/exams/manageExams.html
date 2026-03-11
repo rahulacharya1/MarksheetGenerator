@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen bg-[#fafafa] pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+
+    <div class="max-w-5xl mx-auto">
+        
+        <nav class="flex mb-8 items-center gap-2 text-sm font-medium text-slate-400">
+            <a href="{% url 'teacherdashboard' %}" class="hover:text-indigo-600 transition-colors">Dashboard</a>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="text-slate-900">Exam Management</span>
+        </nav>
+
+        <div class="mb-12">
+            <h1 class="text-3xl md:text-4xl font-black text-slate-900 tracking-tight mb-3">
+                Manage <span class="text-indigo-600">Exam Cycles</span>
+            </h1>
+            <p class="text-slate-500 text-lg max-w-2xl">
+                Configure and oversee academic examination periods. Define whether you are conducting <b>Half-Yearly</b> or <b>Final</b> assessments.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            <a href="{% url 'viewexams' %}" class="group relative bg-white border border-slate-200 rounded-[2.5rem] p-10 transition-all duration-500 hover:border-indigo-500 hover:shadow-2xl hover:shadow-indigo-100">
+                <div class="flex flex-col h-full">
+                    <div class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-3xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    
+                    <h2 class="text-2xl font-bold text-slate-900 mb-3 group-hover:text-indigo-600 transition-colors">Exam Registry</h2>
+                    <p class="text-slate-500 leading-relaxed mb-8">
+                        View all scheduled exam sessions. Monitor the status of current Half-Yearly and Final exam configurations.
+                    </p>
+                    
+                    <div class="mt-auto flex items-center gap-2 text-indigo-600 font-bold">
+                        View All Exams 
+                        <svg class="w-5 h-5 transform group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                    </div>
+                </div>
+            </a>
+
+            <a href="{% url 'addexams' %}" class="group relative bg-slate-900 rounded-[2.5rem] p-10 transition-all duration-500 hover:shadow-2xl hover:shadow-slate-300">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl group-hover:bg-indigo-500/20 transition-colors"></div>
+                
+                <div class="flex flex-col h-full relative z-10">
+                    <div class="w-16 h-16 bg-white/10 text-white rounded-3xl flex items-center justify-center mb-8 group-hover:rotate-12 transition-transform duration-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    
+                    <h2 class="text-2xl font-bold text-white mb-3">Initialize Session</h2>
+                    <p class="text-slate-400 leading-relaxed mb-8">
+                        Create a new exam instance. Select between the Half-Yearly or Final exam types to begin the academic evaluation.
+                    </p>
+                    
+                    <div class="mt-auto flex items-center gap-2 text-white font-bold bg-indigo-600 self-start px-6 py-3 rounded-2xl hover:bg-indigo-500 transition-colors shadow-lg shadow-indigo-900/40">
+                        Create Exam
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+
+        <div class="mt-12 p-8 bg-blue-50 border border-blue-100 rounded-[2rem] flex flex-col md:flex-row items-center gap-6">
+            <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-2xl flex-shrink-0 flex items-center justify-center">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <div class="text-center md:text-left">
+                <h4 class="text-blue-900 font-bold mb-1 text-lg">Model Information</h4>
+                <p class="text-blue-700">You are currently managing <b>Exam Type</b> records. Ensure the correct type is selected as this affects report card generation and weighting.</p>
+            </div>
+        </div>
+
+    </div>
+    
+</div>
+{% endblock %}
