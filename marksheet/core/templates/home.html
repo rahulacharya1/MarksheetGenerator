@@ -66,9 +66,21 @@
                         Centralized management for classroom nodes, faculty assignments, and secure result publication.
                     </p>
                 </div>
+                {% if user.is_authenticated %}
+                    {% if user.school %}
+                    <a href="{% url "principaldashboard" %}" class="relative z-10 w-max px-12 py-6 bg-indigo-600 rounded-2xl text-[12px] font-black uppercase tracking-widest hover:bg-white hover:text-slate-900 transition-all shadow-xl">
+                        Enter Dashboard
+                    </a>
+                    {% else %}
+                    <a href="{% url "teacherdashboard" %}" class="relative z-10 w-max px-12 py-6 bg-indigo-600 rounded-2xl text-[12px] font-black uppercase tracking-widest hover:bg-white hover:text-slate-900 transition-all shadow-xl">
+                        Enter Dashboard
+                    </a>
+                    {% endif %}
+                {% else %}
                 <a href="{% url 'state' %}?type=institute" class="relative z-10 w-max px-12 py-6 bg-indigo-600 rounded-2xl text-[12px] font-black uppercase tracking-widest hover:bg-white hover:text-slate-900 transition-all shadow-xl">
                     Enter Portal Node
                 </a>
+                {% endif %}
             </div>
 
             <div class="group relative bg-white border border-slate-200 rounded-[4rem] p-16 flex flex-col justify-between min-h-[450px] overflow-hidden transition-all duration-500 hover:shadow-3xl hover:shadow-cyan-100 hover:border-cyan-500/30">
