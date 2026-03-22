@@ -29,47 +29,126 @@ def manageSubjects(request):
 @login_required
 @teacher_required
 def addSubjects(request):
+    teacher = Teacher.objects.filter(user=request.user).first()
 
-    teacher = request.teacher
+    if not teacher:
+        return redirect('dashboard')
+
     classroom = teacher.classroom
-    error = None
 
     if request.method == "POST":
-        subject_name = request.POST.get("subject_name")
+        subject_name = request.POST.get('subject_name')
+        pattern = request.POST.get('marks_pattern')
 
-        if not subject_name:
-            error = "Subject name is required."
+        try:
+            theory_max, practical_max = map(int, pattern.split('-'))
 
-        elif ClassSubject.objects.filter(classroom=classroom, subject__iexact=subject_name).exists():
-            error = f"{subject_name} is already registered for this class."
-
-        else:
-            ClassSubject.objects.create(
+            if not ClassSubject.objects.filter(
                 classroom=classroom,
-                subject=subject_name.strip()
-            )
-            return redirect("viewsubjects")
+                subject=subject_name
+            ).exists():
+                ClassSubject.objects.create(
+                    classroom=classroom,
+                    subject=subject_name,
+                    full_marks=100,
+                    theory_max=theory_max,
+                    practical_max=practical_max
+                )
+                return redirect('viewsubjects')
+        except (ValueError, AttributeError):
+            pass
 
-    return render(request, "institute/teacher_admin/subjects/addSubjects.html", {
-        "classroom": classroom,
-        "error": error
-    })
-    
-    
+    return render(
+        request,
+        "institute/teacher_admin/subjects/addSubjects.html",
+        {'classroom': classroom}
+    )
+
+
 # ---------------- VIEW SUBJECTS ----------------
 @login_required
 @teacher_required
 def viewSubjects(request):
-    
-    teacher = request.teacher
-    classroom = teacher.classroom
-    
-    subjects = ClassSubject.objects.filter(classroom=classroom).order_by('subject')
+    teacher = Teacher.objects.filter(user=request.user).first()
+    subjects = ClassSubject.objects.filter(classroom=teacher.classroom)
 
-    return render(request, "institute/teacher_admin/subjects/viewSubjects.html", {
-        "subjects": subjects,
-        "classroom": classroom,
-    })
+    context = {
+        'subjects': subjects,
+        'classroom': teacher.classroom
+    }
+    return render(request, "institute/teacher_admin/subjects/viewSubjects.html", context)
+
+
+# ---------------- EDIT SUBJECTS ----------------
+@login_required
+@teacher_required
+def editSubject(request, subject_id):
+    teacher = Teacher.objects.filter(user=request.user).first()
+
+    if not teacher:
+        return redirect('dashboard')
+
+    subject = ClassSubject.objects.filter(
+        id=subject_id,
+        classroom=teacher.classroom
+    ).first()
+
+    if not subject:
+        return redirect('viewsubjects')
+
+    if request.method == "POST":
+        subject_name = request.POST.get('subject_name')
+        pattern = request.POST.get('marks_pattern')
+
+        try:
+            theory_max, practical_max = map(int, pattern.split('-'))
+
+            if not ClassSubject.objects.filter(
+                classroom=teacher.classroom,
+                subject=subject_name
+            ).exclude(id=subject_id).exists():
+
+                subject.subject = subject_name
+                subject.theory_max = theory_max
+                subject.practical_max = practical_max
+                subject.save()
+
+                return redirect('viewsubjects')
+        except (ValueError, AttributeError):
+            pass
+
+    current_pattern = f"{subject.theory_max}-{subject.practical_max}"
+
+    return render(
+        request,
+        "institute/teacher_admin/subjects/addSubjects.html",
+        {
+            'subject': subject,
+            'classroom': teacher.classroom,
+            'is_edit': True,
+            'current_pattern': current_pattern
+        }
+    )
+
+
+# ---------------- DELETE SUBJECTS ----------------
+@login_required
+@teacher_required
+def deleteSubject(request, subject_id):
+    teacher = Teacher.objects.filter(user=request.user).first()
+
+    if not teacher:
+        return redirect('dashboard')
+
+    subject = ClassSubject.objects.filter(
+        id=subject_id,
+        classroom=teacher.classroom
+    ).first()
+
+    if subject:
+        subject.delete()
+
+    return redirect('viewsubjects')
     
 
 # ---------------- MANAGE STUDENTS ----------------
@@ -135,59 +214,6 @@ def viewStudents(request):
         "classroom": classroom,
     })  
     
-    
-# ---------------- MANAGE EXAMS ----------------
-@login_required
-@teacher_required
-def manageExams(request):
-    return render(request, "institute/teacher_admin/exams/manageExams.html")
-
-
-# ---------------- ADD EXAM ----------------
-@login_required
-@teacher_required
-def addExams(request):
-    teacher = request.teacher
-    classroom = teacher.classroom
-    error = None
-
-    if request.method == "POST":
-        exam_name = request.POST.get("exam_type", "").strip()
-
-        if not exam_name:
-            error = "Exam name is required."
-
-        elif Exam.objects.filter(name__iexact=exam_name, classes=classroom).exists():
-            error = f"'{exam_name}' is already created for this class."
-
-        else:
-            exam = Exam.objects.create(name=exam_name)
-            exam.classes.add(classroom)
-            return redirect("viewexams")
-
-    return render(request, "institute/teacher_admin/exams/addExams.html", {
-        "error": error
-    })
-
-
-# ---------------- VIEW EXAMS ----------------
-@login_required
-@teacher_required
-def viewExams(request):
-    teacher = request.teacher
-    classroom = teacher.classroom
-
-    exams = Exam.objects.filter(classes=classroom).order_by('-id')
-
-    context = {
-        'classroom': classroom,
-        'exams': exams,
-        'school': classroom.school,
-    }
-
-    return render(request, "institute/teacher_admin/exams/viewExams.html", context)
-
-    
 # ---------------- MANAGE MARKS ----------------
 @login_required
 @teacher_required
@@ -199,19 +225,138 @@ def manageMarks(request):
 @login_required
 @teacher_required
 def addMarks(request):
-    return render(request, "institute/teacher_admin/marks/addmarks.html")
+    teacher = Teacher.objects.filter(user=request.user).first()
+
+    if not teacher:
+        return redirect('dashboard')
+
+    classroom = teacher.classroom
+    subjects = ClassSubject.objects.filter(classroom=classroom)
+    students = Student.objects.filter(class_room=classroom).order_by('roll_no')
+
+    if request.method == "POST":
+        student_id = request.POST.get('student')
+        exam_type = request.POST.get('exam')
+
+        if not student_id or not exam_type:
+            return redirect('addmarks')
+
+        student = Student.objects.filter(
+            id=student_id,
+            class_room=classroom
+        ).first()
+
+        if not student:
+            return redirect('addmarks')
+
+        for subject in subjects:
+            theory = request.POST.get(f'theory_{subject.id}', 0)
+            practical = request.POST.get(f'practical_{subject.id}', 0)
+
+            theory = int(theory) if theory else 0
+            practical = int(practical) if practical else 0
+
+            Mark.objects.update_or_create(
+                student=student,
+                subject=subject,
+                exam=exam_type,
+                defaults={
+                    'theory_marks': theory,
+                    'practical_marks': practical
+                }
+            )
+
+        return redirect('viewmarks')
+
+    return render(
+        request,
+        "institute/teacher_admin/marks/addMarks.html",
+        {
+            'subjects': subjects,
+            'students': students,
+            'classroom': classroom
+        }
+    )
 
 
 # ---------------- VIEW MARKS ----------------
 @login_required
 @teacher_required
 def viewMarks(request):
-    return render(request, "institute/teacher_admin/marks/viewmarks.html")
+    teacher = Teacher.objects.filter(user=request.user).first()
+
+    if not teacher:
+        return redirect('dashboard')
+
+    selected_exam = request.GET.get('exam', 'Final')
+
+    marks = Mark.objects.filter(
+        student__class_room=teacher.classroom,
+        exam=selected_exam
+    ).select_related('student', 'subject', 'student__class_room')
+
+    return render(
+        request,
+        "institute/teacher_admin/marks/viewmarks.html",
+        {
+            'marks': marks,
+            'selected_exam': selected_exam,
+            'classroom': teacher.classroom,
+        }
+    )
 
 
-# ---------------- VIEW RESULT ----------------
+# ---------------- VIEW RESULTS ----------------
 @login_required
 @teacher_required
 def viewResults(request):
-    return render(request, "institute/marks/viewresult.html")
+    teacher = Teacher.objects.filter(user=request.user).first()
+    if not teacher:
+        return redirect('dashboard')
 
+    student_id = request.GET.get('student_id')
+    selected_exam = request.GET.get('exam', 'Final')
+
+    student = Student.objects.filter(
+        id=student_id,
+        class_room=teacher.classroom
+    ).first()
+
+    if not student:
+        return redirect('viewmarks')
+
+    marks = Mark.objects.filter(student=student, exam=selected_exam).select_related('subject')
+
+    total_obtained = sum(m.total_marks() for m in marks)
+    total_subjects = marks.count()
+    total_possible = total_subjects * 100
+
+    percentage = round((total_obtained / total_possible) * 100, 2) if total_possible > 0 else 0
+
+    if percentage >= 90:
+        grade = "A+"
+    elif percentage >= 80:
+        grade = "A"
+    elif percentage >= 70:
+        grade = "B"
+    elif percentage >= 60:
+        grade = "C"
+    elif percentage >= 50:
+        grade = "D"
+    elif percentage >= 35:
+        grade = "E"
+    else:
+        grade = "F"
+
+    context = {
+        'student': student,
+        'classroom': teacher.classroom,
+        'marks': marks,
+        'total_obtained': total_obtained,
+        'total_possible': total_possible,
+        'percentage': percentage,
+        'grade': grade,
+        'selected_exam': selected_exam,
+    }
+
+    return render(request, "institute/teacher_admin/marks/viewResult.html", context)

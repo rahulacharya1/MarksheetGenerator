@@ -19,6 +19,7 @@ class SchoolAdmin(admin.ModelAdmin):
         "phone",
         "state",
         "is_verified",
+        "created_at",
     )
 
     list_filter = ("state", "board", "is_verified")
@@ -29,12 +30,15 @@ class SchoolAdmin(admin.ModelAdmin):
         "phone",
     )
 
+    readonly_fields = ("created_at",)
+
 
 # ---------------- ACADEMIC YEAR ----------------
 @admin.register(AcademicYear)
 class AcademicYearAdmin(admin.ModelAdmin):
     list_display = ("school", "year")
     list_filter = ("school",)
+    search_fields = ("year",)
 
 
 # ---------------- CLASSROOM ----------------
@@ -50,7 +54,10 @@ class ClassRoomAdmin(admin.ModelAdmin):
     list_filter = (
         "school",
         "academic_year",
+        "name",
     )
+
+    search_fields = ("section",)
 
 
 # ---------------- TEACHER ----------------
@@ -63,6 +70,25 @@ class TeacherAdmin(admin.ModelAdmin):
     )
 
     list_filter = ("school",)
+    search_fields = ("user__username",)
+
+
+# ---------------- CLASS SUBJECT ----------------
+@admin.register(ClassSubject)
+class ClassSubjectAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "classroom",
+        "subject",
+        "theory_max",
+        "practical_max",
+    )
+
+    list_filter = (
+        "classroom",
+    )
+
+    search_fields = ("subject",)
 
 
 # ---------------- STUDENT ----------------
@@ -86,40 +112,29 @@ class StudentAdmin(admin.ModelAdmin):
     )
 
 
-# ---------------- EXAM ----------------
-@admin.register(Exam)
-class ExamAdmin(admin.ModelAdmin):
-    list_display = ("name",)
-
-
 # ---------------- MARK ----------------
 @admin.register(Mark)
 class MarkAdmin(admin.ModelAdmin):
     list_display = (
         "student",
+        "subject",
         "exam",
-        "marks",
+        "theory_marks",
+        "practical_marks",
+        "total_marks_display",
     )
 
     list_filter = (
         "exam",
+        "subject",
     )
 
     search_fields = (
         "student__student_name",
-    )
-    
-    
-# ---------------- CLASSSUBJECT ----------------
-@admin.register(ClassSubject)
-class ClassSubjectAdmin(admin.ModelAdmin):
-
-    list_display = (
-        "classroom",
-        "subject",
+        "subject__subject",
     )
 
-    list_filter = (
-        "classroom",
-    )
+    def total_marks_display(self, obj):
+        return obj.total_marks()
+    total_marks_display.short_description = "Total Marks"
     

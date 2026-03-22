@@ -42,13 +42,11 @@ urlpatterns = [
     
     path('teacher-dashboard/', teacherDashboard, name="teacherdashboard"),
     
-    path('manage-exams/', manageExams, name="manageexams"),
-    path('add-exams/', addExams, name="addexams"),
-    path('view-exams/', viewExams, name="viewexams"),
-    
     path('manage-subjects/', manageSubjects, name="managesubjects"),
     path('add-subjects/', addSubjects, name="addsubjects"),
     path('view-subjects/', viewSubjects, name="viewsubjects"),
+    path('subjects/edit/<int:subject_id>/', editSubject, name='editsubject'),
+    path('subjects/delete/<int:subject_id>/', deleteSubject, name='deletesubject'),
     
     path('manage-students/', manageStudents, name="managestudents"),
     path('add-students/', addStudents, name="addstudents"),

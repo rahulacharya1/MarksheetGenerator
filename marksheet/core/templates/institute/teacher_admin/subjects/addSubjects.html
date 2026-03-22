@@ -31,11 +31,11 @@
                     <div class="space-y-6">
                         <div class="flex gap-4">
                             <div class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center shrink-0 text-xs font-black text-indigo-400">01</div>
-                            <p class="text-slate-400 text-xs font-medium leading-relaxed uppercase tracking-wider">Define new subjects for your assigned node.</p>
+                            <p class="text-slate-400 text-xs font-medium leading-relaxed uppercase tracking-wider">Select a valid board-approved pattern.</p>
                         </div>
                         <div class="flex gap-4">
                             <div class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center shrink-0 text-xs font-black text-indigo-400">02</div>
-                            <p class="text-slate-400 text-xs font-medium leading-relaxed uppercase tracking-wider">Subjects will be used for performance tracking.</p>
+                            <p class="text-slate-400 text-xs font-medium leading-relaxed uppercase tracking-wider">Restricted to 70/30 or 80/20 schemes.</p>
                         </div>
                     </div>
                 </div>
@@ -44,7 +44,7 @@
             <div class="flex-1 p-10 md:p-16">
                 <div class="mb-12">
                     <h2 class="text-3xl md:text-4xl font-black text-slate-900 tracking-tighter mb-2">
-                        Add <span class="text-indigo-600">Subject</span>
+                        {% if is_edit %}Update{% else %}Add{% endif %} <span class="text-indigo-600">Subject</span>
                     </h2>
                     <p class="text-slate-500 text-sm font-medium">
                         Target Node: 
@@ -57,39 +57,53 @@
                 {% if messages %}
                     {% for message in messages %}
                     <div class="mb-6 p-4 rounded-2xl flex items-center gap-3 {% if message.tags == 'error' %}bg-red-50 text-red-700 border border-red-100{% else %}bg-emerald-50 text-emerald-700 border border-emerald-100{% endif %}">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
                         <p class="text-[10px] font-black uppercase tracking-widest">{{ message }}</p>
                     </div>
                     {% endfor %}
                 {% endif %}
 
-                <form method="post" class="space-y-8">
+                <form method="post" class="space-y-6">
                     {% csrf_token %}
 
-                    <div class="space-y-3">
+                    <div class="space-y-2">
                         <label class="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">
                             Academic Subject Name
                         </label>
-                        <div class="relative group">
-                            <input type="text" name="subject_name" required
-                                class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 font-bold text-slate-700 placeholder:text-slate-300 focus:bg-white focus:ring-4 focus:ring-indigo-500/5 focus:border-indigo-500 focus:outline-none transition-all"
-                                placeholder="e.g. Mathematics">
-                            <div class="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-slate-300 group-focus-within:text-indigo-500 transition-colors">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-                            </div>
-                        </div>
+                        <input type="text" name="subject_name" required value="{{ subject.subject|default:'' }}"
+                            class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 font-bold text-slate-700 focus:bg-white focus:ring-4 focus:ring-indigo-500/5 focus:border-indigo-500 focus:outline-none transition-all"
+                            placeholder="e.g. Mathematics">
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">
+                            Aggregate Marks
+                        </label>
+                        <input type="text" value="100 (System Locked)" readonly
+                            class="w-full bg-slate-100 border border-slate-200 rounded-2xl px-6 py-4 font-black text-slate-400 cursor-not-allowed outline-none select-none">
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">
+                            Assessment Pattern
+                        </label>
+                        <select name="marks_pattern" required
+                            class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 font-bold text-slate-700 focus:bg-white focus:ring-4 focus:ring-indigo-500/5 focus:border-indigo-500 focus:outline-none transition-all appearance-none cursor-pointer">
+                            <option value="70-30" {% if current_pattern == "70-30" %}selected{% endif %}>70 Theory / 30 Practical</option>
+                            <option value="80-20" {% if current_pattern == "80-20" %}selected{% endif %}>80 Theory / 20 Practical</option>
+                        </select>
+                        <p class="text-[9px] text-slate-400 font-medium italic ml-1">Note: Only 70/30 and 80/20 patterns are permitted.</p>
                     </div>
 
                     <div class="pt-8 flex flex-col sm:flex-row items-center gap-4">
                         <button type="submit"
                             class="w-full sm:w-auto bg-slate-900 text-white px-12 py-5 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-indigo-600 hover:shadow-2xl hover:shadow-indigo-200 transition-all duration-300 flex items-center justify-center gap-3">
-                            Initialize Subject
+                            {% if is_edit %}Save Changes{% else %}Initialize Subject{% endif %}
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </button>
 
                         <a href="{% url 'viewsubjects' %}"
                             class="w-full sm:w-auto bg-white border border-slate-200 text-slate-500 px-10 py-5 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-slate-50 hover:text-slate-900 transition-all text-center">
-                            View Registry
+                            Cancel
                         </a>
                     </div>
 

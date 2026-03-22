@@ -1,128 +1,147 @@
 {% extends "base.html" %}
+
 {% block content %}
+<style>
+    @media print {
+        .no-print { display: none !important; }
+        body { background: white !important; }
+        .transcript-card { border: 2px solid #f1f5f9 !important; shadow: none !important; }
+    }
+</style>
 
-<div class="min-h-screen bg-slate-50 pt-28 pb-20 px-4 flex justify-center">
-    <div class="max-w-4xl w-full bg-white shadow-2xl rounded-3xl p-10 border border-slate-200">
-
-        <!-- Header -->
-        <div class="text-center mb-10">
-            <h1 class="text-4xl font-black text-slate-900 mb-2">
-                Academic <span class="text-indigo-600">Marksheet</span>
-            </h1>
-            <p class="text-slate-500">Official Result Statement</p>
-        </div>
-
-        <!-- Student Info -->
-        <div class="grid md:grid-cols-2 gap-6 mb-10 bg-slate-50 p-6 rounded-2xl">
-            <div>
-                <p class="text-sm text-slate-400">Student Name</p>
-                <p class="font-bold text-lg text-slate-800">{{ student.student_name }}</p>
-            </div>
-
-            <div>
-                <p class="text-sm text-slate-400">Roll Number</p>
-                <p class="font-bold text-lg text-slate-800">{{ student.roll_no }}</p>
-            </div>
-
-            <div>
-                <p class="text-sm text-slate-400">School</p>
-                <p class="font-bold text-lg text-slate-800">{{ student.school.school_name }}</p>
-            </div>
-
-            <div>
-                <p class="text-sm text-slate-400">Class</p>
-                <p class="font-bold text-lg text-slate-800">
-                    Grade {{ student.class_room.name }} — Section {{ student.class_room.section }}
-                </p>
-            </div>
-        </div>
-
-        <!-- Marks Table -->
-        <div class="overflow-x-auto mb-10">
-            <table class="w-full border-collapse">
-                <thead>
-                    <tr class="bg-indigo-600 text-white">
-                        <th class="p-4 text-left">Subject</th>
-                        <th class="p-4 text-center">Marks Obtained</th>
-                        <th class="p-4 text-center">Maximum Marks</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for m in marks %}
-                    <tr class="border-b">
-                        <td class="p-4 font-semibold text-slate-700">
-                            {{ m.subject.name }}
-                        </td>
-                        <td class="p-4 text-center font-bold text-slate-800">
-                            {{ m.marks }}
-                        </td>
-                        <td class="p-4 text-center text-slate-500">
-                            100
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Summary -->
-        <div class="grid md:grid-cols-4 gap-6 text-center">
-
-            <div class="bg-slate-100 p-6 rounded-2xl">
-                <p class="text-sm text-slate-500">Total Marks</p>
-                <p class="text-2xl font-black text-slate-900">
-                    {{ total_obtained }} / {{ total_possible }}
-                </p>
-            </div>
-
-            <div class="bg-slate-100 p-6 rounded-2xl">
-                <p class="text-sm text-slate-500">Percentage</p>
-                <p class="text-2xl font-black text-indigo-600">
-                    {{ percentage }}%
-                </p>
-            </div>
-
-            <div class="bg-slate-100 p-6 rounded-2xl">
-                <p class="text-sm text-slate-500">Grade</p>
-                <p class="text-2xl font-black text-slate-900">
-                    {{ grade }}
-                </p>
-            </div>
-
-            <div class="p-6 rounded-2xl 
-                {% if percentage >= 35 %}
-                    bg-green-100
-                {% else %}
-                    bg-red-100
-                {% endif %}
-            ">
-                <p class="text-sm text-slate-500">Result</p>
-                <p class="text-2xl font-black 
-                    {% if percentage >= 35 %}
-                        text-green-600
-                    {% else %}
-                        text-red-600
-                    {% endif %}
-                ">
-                    {% if percentage >= 35 %}
-                        PASS
-                    {% else %}
-                        FAIL
-                    {% endif %}
-                </p>
-            </div>
-
-        </div>
-
-        <!-- Print Button -->
-        <div class="text-center mt-12">
-            <button onclick="window.print()" 
-                class="px-8 py-4 bg-slate-900 text-white rounded-xl font-bold hover:bg-indigo-600 transition">
-                Print Marksheet
+<div class="min-h-screen bg-[#fafafa] pt-32 pb-24 px-4 sm:px-6 lg:px-8 flex justify-center">
+    <div class="max-w-4xl w-full">
+        
+        <!-- Top Toolbar -->
+        <div class="flex items-center justify-between mb-8 no-print">
+            <a href="javascript:history.back()" class="flex items-center gap-2 text-slate-400 hover:text-slate-900 transition-colors font-black text-[10px] tracking-widest uppercase">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" d="M15 19l-7-7 7-7"/></svg>
+                Modify Search
+            </a>
+            <button onclick="window.print()" class="px-8 py-3 bg-slate-900 text-white rounded-2xl font-black text-[10px] tracking-widest uppercase hover:bg-indigo-600 transition-all shadow-xl shadow-slate-200">
+                Print Official Marksheet
             </button>
         </div>
 
+        <div class="transcript-card bg-white border border-slate-200 rounded-[3rem] shadow-sm overflow-hidden relative">
+            
+            <!-- Header: School Branding -->
+            <div class="p-10 md:p-14 border-b border-slate-100 flex flex-col md:flex-row justify-between items-center gap-8 bg-white">
+                <div class="flex items-center gap-8">
+                    <!-- School Logo -->
+                    <div class="w-20 h-20 bg-slate-50 rounded-2xl flex items-center justify-center p-2 border border-slate-100">
+                        {% if student.school.logo %}
+                            <img src="{{ student.school.logo.url }}" class="w-full h-full object-contain">
+                        {% else %}
+                            <svg class="w-10 h-10 text-slate-200" fill="currentColor" viewBox="0 0 20 20"><path d="M10.394 2.827a1 1 0 00-.788 0l-7 3a1 1 0 000 1.848l.898.385a6.017 6.017 0 00.413 8.356 1 1 0 001.413-1.414 4.017 4.017 0 01-.284-5.636l.663.284a1 1 0 00.788 0l7-3a1 1 0 000-1.848l-7-3z"/></svg>
+                        {% endif %}
+                    </div>
+                    <div class="text-center md:text-left">
+                        <h2 class="text-3xl font-black text-slate-900 tracking-tighter uppercase">{{ student.school.school_name }}</h2>
+                        <p class="text-[10px] font-black text-indigo-600 uppercase tracking-[0.3em] mt-1">{{ student.school.board }} BOARD AFFILIATION</p>
+                        <p class="text-slate-400 text-[9px] font-bold mt-1 uppercase tracking-widest">Est. {{ student.school.established_year }} | {{ student.school.official_email }}</p>
+                    </div>
+                </div>
+                
+                <div class="text-center md:text-right">
+                    <div class="inline-block px-5 py-2 rounded-full border-2 {% if percentage >= 35 %}border-emerald-500 text-emerald-600{% else %}border-red-500 text-red-600{% endif %} text-xs font-black uppercase tracking-widest transform -rotate-2">
+                        {% if percentage >= 35 %}RESULT: PASSED{% else %}RESULT: FAILED{% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Student Profile: Photo & Info -->
+            <div class="bg-slate-50/50 px-10 py-10 md:px-14 flex flex-col md:flex-row gap-10 border-b border-slate-100 items-center">
+                <!-- Student Photo Slot -->
+                <div class="w-32 h-40 bg-white border border-slate-200 rounded-2xl flex-shrink-0 flex items-center justify-center text-slate-200 overflow-hidden shadow-sm">
+                    <!-- Note: If you add a 'photo' field to Student model later, use student.photo.url -->
+                    <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/></svg>
+                </div>
+
+                <div class="flex-1 grid grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-8">
+                    <div>
+                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Student Name</p>
+                        <p class="font-bold text-slate-900 uppercase tracking-tight text-lg">{{ student.student_name }}</p>
+                    </div>
+                    <div>
+                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Roll Number</p>
+                        <p class="font-bold text-slate-900 text-lg">{{ student.roll_no }}</p>
+                    </div>
+                    <div>
+                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Academic Session</p>
+                        <p class="font-bold text-slate-900">{{ student.class_room.academic_year.year }}</p>
+                    </div>
+                    <div>
+                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Grade / Section</p>
+                        <p class="font-bold text-slate-900 uppercase">Class {{ student.class_room.name }} — {{ student.class_room.section }}</p>
+                    </div>
+                    <div>
+                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Birth Date</p>
+                        <p class="font-bold text-slate-900">{{ student.dob|date:"d M Y" }}</p>
+                    </div>
+                    <div>
+                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Assessment</p>
+                        <p class="font-bold text-indigo-600 uppercase">{{ exam_type }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subject Details -->
+            <div class="p-10 md:p-14">
+                <table class="w-full">
+                    <thead>
+                        <tr class="text-left border-b-2 border-slate-900">
+                            <th class="pb-5 font-black text-slate-900 uppercase tracking-widest text-[10px]">Subject Breakdown</th>
+                            <th class="pb-5 text-center font-black text-slate-900 uppercase tracking-widest text-[10px]">Theory</th>
+                            <th class="pb-5 text-center font-black text-slate-900 uppercase tracking-widest text-[10px]">Practical</th>
+                            <th class="pb-5 text-right font-black text-slate-900 uppercase tracking-widest text-[10px]">Sub-Total</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        {% for m in marks %}
+                        <tr>
+                            <td class="py-5 font-bold text-slate-700 uppercase text-sm tracking-tight">{{ m.subject.subject }}</td>
+                            <td class="py-5 text-center text-slate-500 font-medium font-mono text-base">{{ m.theory_marks }}</td>
+                            <td class="py-5 text-center text-slate-500 font-medium font-mono text-base">{{ m.practical_marks }}</td>
+                            <td class="py-5 text-right font-black text-slate-900 font-mono text-lg">{{ m.total_marks }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr class="border-t-2 border-slate-900 bg-slate-50">
+                            <td colspan="3" class="py-8 text-right font-black text-slate-900 uppercase tracking-widest text-[11px] px-6">Grand Total Obtained</td>
+                            <td class="py-8 text-right font-black text-3xl text-slate-900 font-mono px-6">
+                                {{ total_obtained }} <span class="text-sm text-slate-300">/ {{ total_possible }}</span>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <!-- Summary Badges -->
+            <div class="grid grid-cols-2 md:grid-cols-3 border-t border-slate-100">
+                <div class="p-10 border-r border-slate-100 text-center">
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Final Percentage</p>
+                    <p class="text-4xl font-black text-indigo-600">{{ percentage }}%</p>
+                </div>
+                <div class="p-10 border-r border-slate-100 text-center">
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Academic Grade</p>
+                    <p class="text-4xl font-black text-slate-900">{{ grade }}</p>
+                </div>
+                <div class="p-10 text-center flex flex-col justify-center items-center">
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Authenticated By</p>
+                    <div class="w-32 h-px bg-slate-200 mt-8 mb-2"></div>
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Office Registry</p>
+                </div>
+            </div>
+
+            <div class="p-12 bg-slate-50/30 flex justify-between items-center text-center md:text-left">
+                <div class="text-[9px] text-slate-400 font-medium uppercase tracking-[0.2em] leading-loose max-w-sm">
+                    Disclaimer: This transcript is an official computer-generated statement of marks from the institutional database. For any discrepancies, contact the school administrator immediately.
+                </div>
+                <p class="hidden md:block text-[10px] font-black text-slate-300 uppercase tracking-[0.5em]">Authentic Record</p>
+            </div>
+        </div>
     </div>
 </div>
-
 {% endblock %}

@@ -182,88 +182,74 @@ def approval(request):
 
 # ---------------- RESULT ----------------
 def result(request):
-
     state_id = request.GET.get("state")
-
     if not state_id:
         return redirect("state")
 
-    schools = School.objects.filter(state_id=state_id)
-
+    schools = School.objects.filter(state_id=state_id, is_verified=True)
     school_id = request.GET.get("school")
-    class_id = request.GET.get("classroom")
-
-    classrooms = None
-    students = None
-
-    if school_id:
-        classrooms = ClassRoom.objects.filter(school_id=school_id)
-
-    if class_id:
-        students = Student.objects.filter(class_room_id=class_id)
 
     return render(request, "result.html", {
         "schools": schools,
-        "classrooms": classrooms,
-        "students": students,
         "state_id": state_id,
         "school_id": school_id,
-        "class_id": class_id,
     })
 
 
 # ---------------- SHOW RESULT ----------------
 def showResult(request):
-
     if request.method != "POST":
-        return redirect("state")
+        return redirect("result")
 
-    state_id = request.POST.get("state_id")
     school_id = request.POST.get("school_id")
-    class_id = request.POST.get("class_id")
-    student_id = request.POST.get("roll_no")
+    state_id = request.POST.get("state_id")
+    grade = request.POST.get("grade")
+    section = request.POST.get("section")
+    roll_no = request.POST.get("roll_no")
+    dob = request.POST.get("dob")
+    exam_type = request.POST.get("exam")
+
+    classroom = ClassRoom.objects.filter(
+        school_id=school_id,
+        name=grade,
+        section=section.upper()
+    ).first()
+
+    if not classroom:
+        return render(request, "result.html", {"error": "Invalid Class or Section.", "state_id": state_id})
 
     student = Student.objects.filter(
-        id=student_id,
-        school__state_id=state_id,
-        class_room_id=class_id
+        class_room=classroom,
+        roll_no=roll_no,
+        dob=dob
     ).first()
 
     if not student:
-        return redirect("result")
+        return render(request, "result.html", {"error": "Student not found. Check Roll No & DOB.", "state_id": state_id})
 
-    student_marks = Mark.objects.filter(
-        student=student
-    ).select_related("exam")
+    marks = Mark.objects.filter(student=student, exam=exam_type).select_related("subject")
 
-    total_obtained = student_marks.aggregate(Sum('marks'))['marks__sum'] or 0
-    total_possible = student_marks.count() * 100
-
+    total_obtained = sum(m.total_marks() for m in marks)
+    total_possible = marks.count() * 100
+    
     percentage = 0
     if total_possible > 0:
         percentage = round((total_obtained / total_possible) * 100, 1)
 
-    # -------- GRADE SYSTEM --------
-    if percentage >= 90:
-        grade = "A+"
-    elif percentage >= 80:
-        grade = "A"
-    elif percentage >= 70:
-        grade = "B"
-    elif percentage >= 60:
-        grade = "C"
-    elif percentage >= 50:
-        grade = "D"
-    elif percentage >= 35:
-        grade = "E"
-    else:
-        grade = "F"
+    if percentage >= 90: grade = "A+"
+    elif percentage >= 80: grade = "A"
+    elif percentage >= 70: grade = "B"
+    elif percentage >= 60: grade = "C"
+    elif percentage >= 50: grade = "D"
+    elif percentage >= 35: grade = "E"
+    else: grade = "F"
 
     return render(request, "showResult.html", {
         "student": student,
-        "marks": student_marks,
+        "marks": marks,
         "total_obtained": total_obtained,
         "total_possible": total_possible,
         "percentage": percentage,
         "grade": grade,
+        "exam_type": exam_type
     })

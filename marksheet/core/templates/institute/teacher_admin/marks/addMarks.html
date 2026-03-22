@@ -22,8 +22,8 @@
                 <h1 class="text-3xl md:text-4xl font-black text-slate-900 tracking-tight mb-3">
                     Input <span class="text-indigo-600">Subject Scores</span>
                 </h1>
-                <p class="text-slate-500 text-lg max-w-xl">
-                    Select a classroom and student to record academic performance. Accuracy is paramount for final grading.
+                <p class="text-slate-500 text-sm font-medium">
+                    Grade {{ classroom.name }}{{ classroom.section }} — {{ classroom.academic_year.year }}
                 </p>
             </div>
         </div>
@@ -33,21 +33,29 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                 
-                <div class="lg:col-span-4 sticky top-32">
+                <div class="lg:col-span-4 sticky top-32 space-y-6">
                     <div class="bg-slate-900 rounded-[2.5rem] p-8 text-white shadow-2xl shadow-slate-200">
-                        <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center mb-6">
+                        <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center mb-6 text-indigo-400">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </div>
-                        <h3 class="text-xl font-bold mb-6">Select Student</h3>
                         
-                        <div>
-                            <select name="student" required class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-white font-medium">
-                                {% for s in students %}
-                                    <option value="{{ s.id }}" class="text-slate-900">
-                                        Roll #{{ s.roll_no }} — {{ s.student_name }}
-                                    </option>
-                                {% endfor %}
-                            </select>
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Target Student</label>
+                                <select name="student" required class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-white font-bold text-sm">
+                                    {% for s in students %}
+                                        <option value="{{ s.id }}" class="text-slate-900">#{{ s.roll_no }} — {{ s.student_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Exam Cycle</label>
+                                <select name="exam" required class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-white font-bold text-sm">
+                                    <option value="Half Yearly" class="text-slate-900">Half Yearly</option>
+                                    <option value="Final" class="text-slate-900">Final Exam</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -55,41 +63,44 @@
                 <div class="lg:col-span-8">
                     <div class="bg-white border border-slate-200 rounded-[2.5rem] p-8 md:p-10 shadow-sm">
                         <div class="flex items-center justify-between mb-8">
-                            <h3 class="text-xl font-black text-slate-900">Subject Breakdown</h3>
-                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Max Score: 100</span>
+                            <h3 class="text-xl font-black text-slate-900">Performance Breakdown</h3>
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Aggregate Weightage: 100</span>
                         </div>
 
-                        <div class="grid grid-cols-1 gap-4">
+                        <div class="space-y-4">
                             {% for subject in subjects %}
-                            <div class="group flex items-center justify-between p-6 bg-slate-50 rounded-3xl border border-transparent hover:border-indigo-200 hover:bg-white hover:shadow-xl hover:shadow-indigo-50 transition-all duration-300">
-                                <div class="flex items-center gap-5">
-                                    <div class="w-12 h-12 flex items-center justify-center rounded-2xl bg-white text-slate-400 font-black text-sm border border-slate-100 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300">
-                                        {{ subject.subject|slice:":2"|upper }}
+                            <div class="group p-6 bg-slate-50 rounded-3xl border border-transparent hover:border-indigo-200 hover:bg-white hover:shadow-xl hover:shadow-indigo-50 transition-all duration-300">
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                                    <div class="flex items-center gap-5">
+                                        <div class="w-12 h-12 flex items-center justify-center rounded-2xl bg-white text-slate-400 font-black text-sm border border-slate-100 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300">
+                                            {{ subject.subject|slice:":2"|upper }}
+                                        </div>
+                                        <div>
+                                            <h4 class="font-bold text-slate-900 group-hover:text-indigo-600 transition-colors uppercase text-sm tracking-tight">{{ subject.subject }}</h4>
+                                            <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest">Ratio: {{ subject.theory_max }}/{{ subject.practical_max }}</p>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <h4 class="font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">{{ subject.subject }}</h4>
-                                        <p class="text-xs text-slate-400 font-medium">Mandatory Field</p>
+                                    
+                                    <div class="flex items-center gap-4">
+                                        <div class="space-y-1">
+                                            <label class="block text-[8px] font-black text-slate-400 uppercase tracking-widest ml-1">Theory</label>
+                                            <input type="number" name="theory_{{ subject.id }}" max="{{ subject.theory_max }}" min="0" required 
+                                                class="w-24 text-center px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none font-bold text-slate-900 transition-all" placeholder="0">
+                                        </div>
+                                        <div class="space-y-1">
+                                            <label class="block text-[8px] font-black text-slate-400 uppercase tracking-widest ml-1">Practical</label>
+                                            <input type="number" name="practical_{{ subject.id }}" max="{{ subject.practical_max }}" min="0" required 
+                                                class="w-24 text-center px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none font-bold text-slate-900 transition-all" placeholder="0">
+                                        </div>
                                     </div>
-                                </div>
-                                
-                                <div class="w-32">
-                                    <input type="number" 
-                                           name="marks_{{ subject.id }}" 
-                                           placeholder="00"
-                                           max="100"
-                                           required 
-                                           class="w-full text-right px-4 py-3 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none font-mono font-black text-2xl text-slate-900 transition-all">
                                 </div>
                             </div>
                             {% endfor %}
                         </div>
 
                         <div class="mt-10 flex items-center gap-4">
-                            <button type="submit" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-black py-5 rounded-2xl shadow-xl shadow-indigo-200 transition-all active:scale-[0.98] uppercase tracking-widest text-sm">
-                                Finalize & Save Record
-                            </button>
-                            <button type="reset" class="px-8 py-5 text-slate-400 hover:text-red-500 font-bold text-sm transition-colors">
-                                Clear
+                            <button type="submit" class="flex-1 bg-slate-900 hover:bg-indigo-600 text-white font-black py-5 rounded-2xl shadow-xl shadow-slate-200 hover:shadow-indigo-100 transition-all active:scale-[0.98] uppercase tracking-widest text-xs">
+                                Finalize & Save Performance
                             </button>
                         </div>
                     </div>
