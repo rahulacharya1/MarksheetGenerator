@@ -93,6 +93,27 @@
         </div>
     </header>
 
+    <!-- 🔥 GLOBAL ERROR ALERT -->
+    {% if error %}
+    <div id="error-box" class="fixed top-24 right-6 z-[999] max-w-sm w-full transition-all duration-500">
+        <div class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 flex items-start gap-3 shadow-xl">
+            
+            <svg class="w-5 h-5 text-red-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 9v2m0 4h.01M5.07 19h13.86c1.54 0 2.5-1.67 
+                    1.73-3L13.73 4c-.77-1.33-2.69-1.33-3.46 
+                    0L3.34 16c-.77 1.33.19 3 1.73 3z"/>
+            </svg>
+
+            <div>
+                <p class="text-sm font-bold text-red-600">Error</p>
+                <p class="text-sm text-red-500 font-medium">{{ error }}</p>
+            </div>
+
+        </div>
+    </div>
+    {% endif %}
+
     <main>
         {% block content %}{% endblock %}
     </main>
@@ -162,3 +183,17 @@
     
 </body>
 </html>
+
+<script>
+    // 🔥 Auto hide error after 2 sec
+    setTimeout(() => {
+        const box = document.getElementById("error-box");
+        if (box) {
+            box.style.opacity = "0";
+            box.style.transform = "translateY(-10px)";
+            setTimeout(() => box.remove(), 500);
+        }
+    }, 2000);
+</script>
+
+

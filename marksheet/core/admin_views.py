@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib.admin.views.decorators import staff_member_required
 from .models import State, School
 
@@ -12,25 +12,21 @@ def adminDashboard(request):
 # ---------------- ADD STATE ----------------
 @staff_member_required
 def addState(request):
-
     if request.method == "POST":
-
         name = request.POST.get("name")
 
         if name:
-            State.objects.create(name=name)
+            if not State.objects.filter(name__iexact=name).exists():
+                State.objects.create(name=name)
 
         return redirect("viewstate")
-
     return render(request, "admin/addState.html")
 
 
 # ---------------- VIEW STATE ----------------
 @staff_member_required
 def viewState(request):
-
     states = State.objects.all()
-
     return render(request, "admin/viewState.html", {
         "states": states
     })
@@ -39,13 +35,13 @@ def viewState(request):
 # ---------------- VIEW INSTITUTE ----------------
 @staff_member_required
 def viewInstitute(request):
-
-    states = State.objects.all()
-
-    schools = School.objects.all()
-
+    state_id = request.GET.get("state")
+    if state_id:
+        schools = School.objects.filter(state_id=state_id)
+    else:
+        schools = School.objects.all()
     return render(request, "admin/viewInstitute.html", {
-        "states": states,
+        "states": state_id,
         "schools": schools
     })
 
@@ -53,35 +49,35 @@ def viewInstitute(request):
 # ---------------- APPROVE SCHOOL ----------------
 @staff_member_required
 def approveSchool(request, school_id):
-
-    school = get_object_or_404(School, id=school_id)
+    school = School.objects.filter(id=school_id).first()
+    if not school:
+        return redirect("viewinstitute")
 
     school.is_verified = True
     school.save()
-
     return redirect("viewinstitute")
 
 
 # ---------------- REMOVE SCHOOL APPROVAL ----------------
 @staff_member_required
 def removeSchool(request, school_id):
-
-    school = get_object_or_404(School, id=school_id)
+    school = School.objects.filter(id=school_id).first()
+    if not school:
+        return redirect("viewinstitute")
 
     school.is_verified = False
     school.save()
-
     return redirect("viewinstitute")
 
 
 # ---------------- DELETE SCHOOL ----------------
 @staff_member_required
 def deleteSchool(request, school_id):
-
-    school = get_object_or_404(School, id=school_id)
+    school = School.objects.filter(id=school_id).first()
+    if not school:
+        return redirect("viewinstitute")
 
     if not school.is_verified:
         school.delete()
-
     return redirect("viewinstitute")
 

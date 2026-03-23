@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from django.db.models import Sum
 from .models import *
+from datetime import datetime
+import re
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
 
 
 # ---------------- HOME ----------------
@@ -38,16 +41,16 @@ def loginView(request):
 
         user = authenticate(
             request,
-            username=request.POST['username'],
-            password=request.POST['password']
+            username = request.POST.get('username'),
+            password = request.POST.get('password')
         )
 
-        if user:
+        if user and user.is_active:
 
             # ---------- PRINCIPAL LOGIN ----------
-            if hasattr(user, "school"):
+            school = School.objects.filter(user=user).first()
 
-                school = user.school
+            if school:
 
                 if str(school.state.id) != str(state_id):
                     return render(request, "institute/login.html", {
@@ -62,9 +65,9 @@ def loginView(request):
                 return redirect("principaldashboard")
 
             # ---------- TEACHER LOGIN ----------
-            if hasattr(user, "teacher"):
-
-                teacher = user.teacher
+            teacher = Teacher.objects.filter(user=user).first()
+            
+            if teacher:
 
                 if str(teacher.school.state.id) != str(state_id):
                     return render(request, "institute/login.html", {
@@ -116,10 +119,62 @@ def registerView(request):
 
         registration_certificate = request.FILES.get("registration_certificate")
 
+        current_year = datetime.now().year
+
         if password != confirm_password:
             return render(request, "institute/register.html", {
                 "state": state,
                 "error": "Passwords do not match"
+            })
+
+        if not re.match(r'^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$', password):
+            return render(request, "institute/register.html", {
+                "state": state,
+                "error": "Password must be at least 8 characters with 1 capital, 1 number, and 1 special character"
+            })
+
+        if established_year:
+            try:
+                established_year = int(established_year)
+                if established_year < 1900 or established_year > current_year:
+                    raise ValueError
+            except:
+                return render(request, "institute/register.html", {
+                    "state": state,
+                    "error": "Invalid established year"
+                })
+
+        try:
+            validate_email(email)
+        except ValidationError:
+            return render(request, "institute/register.html", {
+                "state": state,
+                "error": "Invalid email format"
+            })
+
+        if not re.match(r'^[6-9]\d{9}$', phone):
+            return render(request, "institute/register.html", {
+                "state": state,
+                "error": "Enter valid 10-digit Indian phone number"
+            })
+
+        if not re.match(r'^\d{6}$', pincode):
+            return render(request, "institute/register.html", {
+                "state": state,
+                "error": "Pincode must be 6 digits"
+            })
+
+        if affiliation_number:
+            if not re.match(r'^[A-Za-z0-9\-]+$', affiliation_number):
+                return render(request, "institute/register.html", {
+                    "state": state,
+                    "error": "Invalid affiliation number"
+                })
+
+        if not re.match(r'^[a-zA-Z0-9_]+$', username):
+            return render(request, "institute/register.html", {
+                "state": state,
+                "error": "Username can only contain letters, numbers, underscore"
             })
 
         if User.objects.filter(username=username).exists():
@@ -135,9 +190,9 @@ def registerView(request):
             })
 
         user = User.objects.create_user(
-            username=username,
+            username=username.lower(),
             password=password,
-            email=email,
+            email=email.lower(),
             first_name=admin_name
         )
 
@@ -147,7 +202,7 @@ def registerView(request):
             established_year=established_year if established_year else None,
             board=board,
             affiliation_number=affiliation_number,
-            official_email=email,
+            official_email=email.lower(),
             phone=phone,
             state=state,
             pincode=pincode,
@@ -206,8 +261,38 @@ def showResult(request):
     grade = request.POST.get("grade")
     section = request.POST.get("section")
     roll_no = request.POST.get("roll_no")
-    dob = request.POST.get("dob")
+    dob_input = request.POST.get("dob")
     exam_type = request.POST.get("exam")
+
+    schools = School.objects.filter(state_id=state_id, is_verified=True)
+
+    if not all([school_id, grade, section, roll_no, dob_input, exam_type]):
+        return render(request, "result.html", {
+            "error": "All fields are required",
+            "state_id": state_id,
+            "school_id": school_id,
+            "grade": grade,
+            "section": section,
+            "roll_no": roll_no,
+            "dob": dob_input,
+            "exam": exam_type,
+            "schools": schools
+        })
+
+    try:
+        dob = datetime.strptime(dob_input, "%Y-%m-%d").date()
+    except ValueError:
+        return render(request, "result.html", {
+            "error": "Invalid date format",
+            "state_id": state_id,
+            "school_id": school_id,
+            "grade": grade,
+            "section": section,
+            "roll_no": roll_no,
+            "dob": dob_input,
+            "exam": exam_type,
+            "schools": schools
+        })
 
     classroom = ClassRoom.objects.filter(
         school_id=school_id,
@@ -216,7 +301,17 @@ def showResult(request):
     ).first()
 
     if not classroom:
-        return render(request, "result.html", {"error": "Invalid Class or Section.", "state_id": state_id})
+        return render(request, "result.html", {
+            "error": "Invalid class or section",
+            "state_id": state_id,
+            "school_id": school_id,
+            "grade": grade,
+            "section": section,
+            "roll_no": roll_no,
+            "dob": dob_input,
+            "exam": exam_type,
+            "schools": schools
+        })
 
     student = Student.objects.filter(
         class_room=classroom,
@@ -225,24 +320,48 @@ def showResult(request):
     ).first()
 
     if not student:
-        return render(request, "result.html", {"error": "Student not found. Check Roll No & DOB.", "state_id": state_id})
+        return render(request, "result.html", {
+            "error": "Student not found. Check Roll No & DOB.",
+            "state_id": state_id,
+            "school_id": school_id,
+            "grade": grade,
+            "section": section,
+            "roll_no": roll_no,
+            "dob": dob_input,
+            "exam": exam_type,
+            "schools": schools
+        })
 
-    marks = Mark.objects.filter(student=student, exam=exam_type).select_related("subject")
+    marks = Mark.objects.filter(
+        student=student,
+        exam=exam_type
+    ).select_related("subject")
+
+    if not marks.exists():
+        return render(request, "result.html", {
+            "error": "Result not uploaded yet",
+            "state_id": state_id,
+            "school_id": school_id,
+            "grade": grade,
+            "section": section,
+            "roll_no": roll_no,
+            "dob": dob_input,
+            "exam": exam_type,
+            "schools": schools
+        })
 
     total_obtained = sum(m.total_marks() for m in marks)
-    total_possible = marks.count() * 100
-    
-    percentage = 0
-    if total_possible > 0:
-        percentage = round((total_obtained / total_possible) * 100, 1)
+    total_possible = sum(m.subject.theory_max + m.subject.practical_max for m in marks)
 
-    if percentage >= 90: grade = "A+"
-    elif percentage >= 80: grade = "A"
-    elif percentage >= 70: grade = "B"
-    elif percentage >= 60: grade = "C"
-    elif percentage >= 50: grade = "D"
-    elif percentage >= 35: grade = "E"
-    else: grade = "F"
+    percentage = round((total_obtained / total_possible) * 100, 1) if total_possible > 0 else 0
+
+    if percentage >= 90: final_grade = "A+"
+    elif percentage >= 80: final_grade = "A"
+    elif percentage >= 70: final_grade = "B"
+    elif percentage >= 60: final_grade = "C"
+    elif percentage >= 50: final_grade = "D"
+    elif percentage >= 35: final_grade = "E"
+    else: final_grade = "F"
 
     return render(request, "showResult.html", {
         "student": student,
@@ -250,6 +369,7 @@ def showResult(request):
         "total_obtained": total_obtained,
         "total_possible": total_possible,
         "percentage": percentage,
-        "grade": grade,
+        "grade": final_grade,
         "exam_type": exam_type
     })
+    

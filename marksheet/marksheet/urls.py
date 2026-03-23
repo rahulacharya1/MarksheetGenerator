@@ -29,6 +29,7 @@ urlpatterns = [
     path('principal-dashboard/', principalDashboard, name='principaldashboard'),
     path('academic-year/', academicYear, name="academicyear"),
     path('profile/', institutionProfile, name='profile'),
+    path('edit-profile/', editProfile, name='editprofile'),
     
     path('manage-class/', manageClass, name="manageclass"),
     path('add-class/', addClass, name="addclass"),
