@@ -326,10 +326,15 @@ def viewMarks(request):
         student__class_room=teacher.classroom,
         exam=exam
     ).select_related("student", "subject")
+    
+    school = teacher.school
 
     return render(request, "institute/teacher_admin/marks/viewmarks.html", {
         "marks": marks,
-        "selected_exam": exam
+        "selected_exam": exam,
+        "teacher": teacher,
+        "school": school,
+        "classroom": teacher.classroom,
     })
 
 
@@ -384,6 +389,8 @@ def viewResults(request):
         'percentage': percentage,
         'grade': grade,
         'selected_exam': selected_exam,
+        'teacher': teacher,
+        'school': teacher.school,
     }
 
     return render(request, "institute/teacher_admin/marks/viewResult.html", context)

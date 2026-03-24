@@ -120,6 +120,7 @@ def registerView(request):
 
         registration_certificate = request.FILES.get("registration_certificate")
         logo = request.FILES.get('logo')
+        principal_sign = request.FILES.get('principal_sign')
 
         current_year = datetime.now().year
 
@@ -209,7 +210,8 @@ def registerView(request):
             state=state,
             pincode=pincode,
             registration_certificate=registration_certificate,
-            logo=logo
+            logo=logo,
+            principal_sign=principal_sign
         )
 
         return redirect('adminapproval')
@@ -282,7 +284,7 @@ def showResult(request):
             "roll_no": roll_no,
             "dob": dob_input,
             "exam": exam_type,
-            "schools": schools
+            "schools": schools,
         })
 
     try:
@@ -368,6 +370,9 @@ def showResult(request):
     elif percentage >= 50: final_grade = "D"
     elif percentage >= 35: final_grade = "E"
     else: final_grade = "F"
+    
+    teacher = Teacher.objects.filter(classroom=classroom).first()
+    school = student.school
 
     return render(request, "showResult.html", {
         "student": student,
@@ -376,6 +381,8 @@ def showResult(request):
         "total_possible": total_possible,
         "percentage": percentage,
         "grade": final_grade,
-        "exam_type": exam_type
+        "exam_type": exam_type,
+        "teacher": teacher,
+        "school": school,
     })
     

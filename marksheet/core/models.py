@@ -40,6 +40,8 @@ class School(models.Model):
     logo = models.ImageField(
         upload_to='school_logos/', null=True, blank=True
     )
+    
+    principal_sign = models.ImageField(upload_to='principal_signs/', blank=True, null=True)
 
     is_verified = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -84,6 +86,7 @@ class Teacher(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     school = models.ForeignKey(School, on_delete=models.CASCADE)
     classroom = models.ForeignKey(ClassRoom, on_delete=models.CASCADE)
+    teacher_sign = models.ImageField(upload_to='teacher_signs/', null=True, blank=True)
 
     def __str__(self):
         return f"{self.user.first_name} - {self.classroom}"

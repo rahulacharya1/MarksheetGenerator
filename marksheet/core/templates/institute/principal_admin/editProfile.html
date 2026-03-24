@@ -108,7 +108,7 @@
                             
                             {% if school.registration_certificate %}
                             <div class="flex items-center justify-between mb-4 p-3 bg-white rounded-2xl border border-slate-200 shadow-sm">
-                                <div class="flex items-center gap-3">
+                                <div class="flex items-center gap-3 p-1">
                                     <div class="w-10 h-10 bg-rose-50 text-rose-500 rounded-lg flex items-center justify-center">
                                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"/></svg>
                                     </div>
@@ -124,6 +124,17 @@
                                 file:border-0 file:text-[10px] file:font-black 
                                 file:bg-indigo-600 file:text-white 
                                 hover:file:bg-indigo-700 transition-all cursor-pointer">
+                        </div>
+
+                        <div class="flex-1">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1 block mb-4">Principal Signature (PNG/JPG)</label>
+                            {% if school.principal_sign %}
+                            <div class="flex items-center gap-4 mb-4 p-3 bg-white rounded-2xl border border-slate-200 shadow-sm">
+                                <img src="{{ school.principal_sign.url }}" class="w-12 h-12 rounded-xl object-contain border border-slate-100">
+                                <span class="text-[10px] font-black text-emerald-600 uppercase">Current Signature</span>
+                            </div>
+                            {% endif %}
+                            <input type="file" name="principal_sign" class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-black file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 transition-all cursor-pointer">
                         </div>
                 
                     </div>

@@ -44,6 +44,7 @@ def editProfile(request):
         pincode = request.POST.get("pincode")
         logo = request.FILES.get("logo")
         registration_certificate = request.FILES.get("registration_certificate")
+        principal_sign = request.FILES.get("principal_sign")
 
         if not re.match(r'^[6-9]\d{9}$', phone):
             return render(request, "institute/principal_admin/editProfile.html", {
@@ -82,6 +83,9 @@ def editProfile(request):
         
         if registration_certificate:
             school.registration_certificate = registration_certificate
+            
+        if principal_sign:
+            school.principal_sign = principal_sign
 
         school.save()
         return redirect("profile")
@@ -260,6 +264,7 @@ def addTeachers(request):
         username = request.POST.get("username").lower()
         password = request.POST.get("password")
         classroom_id = request.POST.get("classroom")
+        teacher_sign = request.FILES.get("teacher_sign")
 
         if not re.match(r'^[a-zA-Z0-9_]+$', username):
             return render(request, "institute/principal_admin/teacher/addTeacher.html", {
@@ -307,7 +312,8 @@ def addTeachers(request):
         Teacher.objects.create(
             user=user,
             school=school,
-            classroom=classroom
+            classroom=classroom,
+            teacher_sign=teacher_sign
         )
 
         return redirect("viewteachers")

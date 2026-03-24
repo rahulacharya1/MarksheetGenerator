@@ -60,12 +60,12 @@ urlpatterns = [
     
     # ---------------- ADMIN ----------------
     
-    path('admin', adminDashboard, name="admindashboard"),
+    path('admin/', adminDashboard, name="admindashboard"),
     
-    path('add-state', addState, name="addstate"),
-    path('view-state', viewState, name="viewstate"),
+    path('add-state/', addState, name="addstate"),
+    path('view-state/', viewState, name="viewstate"),
     
-    path('view-institute', viewInstitute, name="viewinstitute"),
+    path('view-institute/', viewInstitute, name="viewinstitute"),
     
     path("admin/school/approve/<int:school_id>/", approveSchool, name="approveschool"),
     path("admin/school/remove/<int:school_id>/", removeSchool, name="removeschool"),
