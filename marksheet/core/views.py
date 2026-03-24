@@ -84,7 +84,8 @@ def loginView(request):
         })
 
     return render(request, "institute/login.html", {
-        "state": state
+        "state": state,
+        "type": "institute"
     })
 
 
@@ -118,6 +119,7 @@ def registerView(request):
         confirm_password = request.POST.get("confirm_password")
 
         registration_certificate = request.FILES.get("registration_certificate")
+        logo = request.FILES.get('logo')
 
         current_year = datetime.now().year
 
@@ -206,12 +208,16 @@ def registerView(request):
             phone=phone,
             state=state,
             pincode=pincode,
-            registration_certificate=registration_certificate
+            registration_certificate=registration_certificate,
+            logo=logo
         )
 
         return redirect('adminapproval')
 
-    return render(request, "institute/register.html", {"state": state})
+    return render(request, "institute/register.html", {
+        "state": state,
+        "type": "register"
+    })
 
 
 # ---------------- LOGOUT ----------------

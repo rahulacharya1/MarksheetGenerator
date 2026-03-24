@@ -1,68 +1,144 @@
 {% extends "base.html" %}
+
 {% block content %}
+<div class="min-h-screen bg-[#fafafa] pt-32 pb-20 px-4 sm:px-6 lg:px-8">
 
-<div class="max-w-3xl mx-auto bg-white pt-32 pb-28 px-10">
+    <div class="max-w-5xl mx-auto">
+        
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+            <div class="text-center md:text-left">
+                <h1 class="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">Update <span class="text-indigo-600">Institution</span></h1>
+                <p class="text-slate-500 font-medium mt-2">Refine your school's digital identity and contact details.</p>
+            </div>
+            <div class="flex gap-3">
+                <a href="{% url 'profile' %}" class="px-6 py-3 bg-white border border-slate-200 text-slate-600 rounded-2xl font-bold hover:bg-slate-50 transition-all text-sm shadow-sm">
+                    Discard Changes
+                </a>
+            </div>
+        </div>
 
-    <h2 class="text-2xl font-bold mb-6 text-slate-800">Edit Profile</h2>
+        <form method="POST" enctype="multipart/form-data" class="space-y-8">
+            {% csrf_token %}
 
-    {% if error %}
-    <div class="mb-4 p-3 bg-red-100 text-red-600 rounded">
-        {{ error }}
+            <div class="bg-white border border-slate-200 rounded-[3rem] p-8 md:p-12 shadow-2xl shadow-slate-200/50">
+                
+                <div class="mb-12">
+                    <div class="flex items-center gap-3 mb-8">
+                        <div class="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                        </div>
+                        <h3 class="text-xl font-black text-slate-800 tracking-tight">Institution Profile</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">School Name</label>
+                            <input type="text" name="school_name" value="{{ school.school_name }}" class="w-full bg-white border-2 border-slate-200 rounded-2xl px-6 py-4 text-slate-900 font-bold focus:border-indigo-600 focus:ring-4 focus:ring-indigo-600/10 transition-all outline-none">
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Established Year</label>
+                            <input type="number" name="established_year" value="{{ school.established_year }}" class="w-full bg-white border-2 border-slate-200 rounded-2xl px-6 py-4 text-slate-900 font-bold focus:border-indigo-600 focus:ring-4 focus:ring-indigo-600/10 transition-all outline-none">
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Education Board</label>
+                            <select name="board" class="w-full bg-white border-2 border-slate-200 rounded-2xl px-6 py-4 text-slate-900 font-bold focus:border-indigo-600 transition-all outline-none appearance-none">
+                                <option {% if school.board == 'CBSE' %}selected{% endif %}>CBSE</option>
+                                <option {% if school.board == 'ICSE' %}selected{% endif %}>ICSE</option>
+                                <option {% if school.board == 'State Board' %}selected{% endif %}>State Board</option>
+                                <option {% if school.board == 'IB' %}selected{% endif %}>IB</option>
+                            </select>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Affiliation Number</label>
+                            <input type="text" name="affiliation_number" value="{{ school.affiliation_number }}" class="w-full bg-white border-2 border-slate-200 rounded-2xl px-6 py-4 text-slate-900 font-bold focus:border-indigo-600 focus:ring-4 focus:ring-indigo-600/10 transition-all outline-none">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-12">
+                    <div class="flex items-center gap-3 mb-8">
+                        <div class="w-8 h-8 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                        </div>
+                        <h3 class="text-xl font-black text-slate-800 tracking-tight">Contact & Location</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Official Email</label>
+                            <input type="email" name="official_email" value="{{ school.official_email }}" class="w-full bg-white border-2 border-slate-200 rounded-2xl px-6 py-4 text-slate-900 font-bold focus:border-indigo-600 transition-all outline-none">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Phone Number</label>
+                            <input type="tel" name="phone" value="{{ school.phone }}" class="w-full bg-white border-2 border-slate-200 rounded-2xl px-6 py-4 text-slate-900 font-bold focus:border-indigo-600 transition-all outline-none">
+                        </div>
+                        <div class="space-y-2 md:col-span-2">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">PIN Code</label>
+                            <input type="text" name="pincode" value="{{ school.pincode }}" class="w-full bg-white border-2 border-slate-200 rounded-2xl px-6 py-4 text-slate-900 font-bold focus:border-indigo-600 transition-all outline-none">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-8 bg-slate-50 rounded-[2.5rem] border border-slate-100">
+                    <div class="flex flex-col md:flex-row gap-10 w-full">
+                        
+                        <div class="flex-1">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1 block mb-4">School Logo (PNG/JPG)</label>
+                            
+                            {% if school.logo %}
+                            <div class="flex items-center gap-4 mb-4 p-3 bg-white rounded-2xl border border-slate-200 shadow-sm">
+                                <img src="{{ school.logo.url }}" class="w-12 h-12 rounded-xl object-cover border border-slate-100">
+                                <span class="text-[10px] font-black text-indigo-600 uppercase">Current Logo Active</span>
+                            </div>
+                            {% endif %}
+                
+                            <input type="file" name="logo" 
+                                class="block w-full text-xs text-slate-500 
+                                file:mr-4 file:py-2 file:px-4 file:rounded-full 
+                                file:border-0 file:text-[10px] file:font-black 
+                                file:bg-indigo-600 file:text-white 
+                                hover:file:bg-indigo-700 transition-all cursor-pointer">
+                        </div>
+                
+                        <div class="flex-1">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1 block mb-4">Registration Certificate (PDF)</label>
+                            
+                            {% if school.registration_certificate %}
+                            <div class="flex items-center justify-between mb-4 p-3 bg-white rounded-2xl border border-slate-200 shadow-sm">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 bg-rose-50 text-rose-500 rounded-lg flex items-center justify-center">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"/></svg>
+                                    </div>
+                                    <span class="text-[10px] font-black text-slate-700 uppercase">Certificate.pdf</span>
+                                </div>
+                                <a href="{{ school.registration_certificate.url }}" target="_blank" class="text-[9px] font-black text-indigo-600 hover:underline px-2">VIEW</a>
+                            </div>
+                            {% endif %}
+                
+                            <input type="file" name="registration_certificate" 
+                                class="block w-full text-xs text-slate-500 
+                                file:mr-4 file:py-2 file:px-4 file:rounded-full 
+                                file:border-0 file:text-[10px] file:font-black 
+                                file:bg-indigo-600 file:text-white 
+                                hover:file:bg-indigo-700 transition-all cursor-pointer">
+                        </div>
+                
+                    </div>
+                </div>
+
+                <div class="mt-12 pt-8 border-t border-slate-50">
+                    <button type="submit" class="w-full bg-slate-900 text-white py-5 rounded-[1.5rem] font-black uppercase tracking-[0.2em] text-sm hover:bg-indigo-600 hover:-translate-y-1 active:scale-[0.98] transition-all shadow-xl shadow-indigo-100 flex items-center justify-center gap-3">
+                        Save Changes
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    </button>
+                </div>
+
+            </div>
+        </form>
     </div>
-    {% endif %}
-
-    <form method="POST" enctype="multipart/form-data" class="space-y-4">
-        {% csrf_token %}
-
-        <!-- School Name (readonly) -->
-        <div>
-            <label class="block text-sm font-medium">School Name</label>
-            <input type="text" value="{{ school.school_name }}" readonly
-                class="w-full mt-1 p-2 border rounded bg-gray-100">
-        </div>
-
-        <!-- Email (readonly) -->
-        <div>
-            <label class="block text-sm font-medium">Email</label>
-            <input type="text" value="{{ school.official_email }}" readonly
-                class="w-full mt-1 p-2 border rounded bg-gray-100">
-        </div>
-
-        <!-- Phone -->
-        <div>
-            <label class="block text-sm font-medium">Phone</label>
-            <input type="text" name="phone" value="{{ school.phone }}"
-                class="w-full mt-1 p-2 border rounded">
-        </div>
-
-        <!-- Pincode -->
-        <div>
-            <label class="block text-sm font-medium">Pincode</label>
-            <input type="text" name="pincode" value="{{ school.pincode }}"
-                class="w-full mt-1 p-2 border rounded">
-        </div>
-
-        <!-- Affiliation -->
-        <div>
-            <label class="block text-sm font-medium">Affiliation Number</label>
-            <input type="text" name="affiliation_number" value="{{ school.affiliation_number }}"
-                class="w-full mt-1 p-2 border rounded">
-        </div>
-
-        <!-- Logo -->
-        <div>
-            <label class="block text-sm font-medium">School Logo</label>
-            <input type="file" name="logo" class="w-full mt-1">
-        </div>
-
-        <!-- Submit -->
-        <button type="submit"
-            class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700">
-            Update Profile
-        </button>
-
-    </form>
-
+    
 </div>
-
 {% endblock %}

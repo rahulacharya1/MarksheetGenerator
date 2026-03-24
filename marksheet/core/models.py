@@ -113,6 +113,10 @@ class Student(models.Model):
     student_name = models.CharField(max_length=100)
     roll_no = models.PositiveIntegerField()
     dob = models.DateField()
+    photo = models.ImageField(upload_to='student_photos/', null=True, blank=True)
+    father_name = models.CharField(max_length=100, blank=True)
+    guardian_phone = models.CharField(max_length=10, blank=True)
+    address = models.TextField(blank=True)
 
     class Meta:
         unique_together = ('class_room','roll_no')

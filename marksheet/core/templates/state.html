@@ -27,7 +27,7 @@
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" id="stateGrid">
             {% for state in states %}
-                <a href="{% if type == 'institute' %}{% url 'login' %}{% else %}{% url 'result' %}{% endif %}?state={{ state.id }}"
+                <a href="{% if type == 'institute' %}{% url 'login' %}{% elif type == 'register' %}{% url 'register' %}{% else %}{% url 'result' %}{% endif %}?state={{ state.id }}"
                    class="state-card group relative overflow-hidden bg-white/70 backdrop-blur-md p-5 rounded-2xl border border-white shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-4">

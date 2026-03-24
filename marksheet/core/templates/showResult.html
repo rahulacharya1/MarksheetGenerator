@@ -2,146 +2,199 @@
 
 {% block content %}
 <style>
+    /* 1. PRINT-ONLY LOGICAL FIX FOR GHOST SECOND PAGE */
     @media print {
-        .no-print { display: none !important; }
-        body { background: white !important; }
-        .transcript-card { border: 2px solid #f1f5f9 !important; shadow: none !important; }
+        /* Set Page size and force zero margins for the browser's default layout */
+        @page {
+            size: A4;
+            margin: 0; /* Remove default headers/footers space */
+        }
+
+        /* Prevent the body from allowing a second page */
+        html, body {
+            height: 100%;
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow: hidden; /* This stops the second page spillover */
+        }
+
+        /* Hide everything by default */
+        body * {
+            visibility: hidden;
+        }
+
+        /* Show ONLY the Marksheet Container */
+        #printable-marksheet, #printable-marksheet * {
+            visibility: visible;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        /* Absolute positioning with scaling to ensure fit */
+        #printable-marksheet {
+            position: absolute;
+            left: 50%;
+            top: 20px; /* Slight top gap for aesthetics */
+            transform: translateX(-50%) scale(0.95); /* Centered and slightly smaller */
+            transform-origin: top center;
+            width: 210mm !important; /* Fixed A4 width */
+            max-height: 280mm !important; /* Ensure it stays under A4 height */
+            margin: 0 !important;
+            padding: 0 !important;
+            border: 1px solid #e2e8f0 !important;
+            box-shadow: none !important;
+            border-radius: 1rem !important;
+            page-break-after: avoid; /* Crucial: Tells browser not to break here */
+            break-inside: avoid;
+        }
+
+        /* Hide the Action Bar (Back/Export buttons) */
+        .no-print {
+            display: none !important;
+        }
+
+        /* Tighten vertical spacing for long subject lists */
+        .p-8 { padding: 1.5rem !important; }
+        .p-6 { padding: 1rem !important; }
+        .py-4 { padding-top: 0.5rem !important; padding-bottom: 0.5rem !important; }
     }
 </style>
 
-<div class="min-h-screen bg-[#fafafa] pt-32 pb-24 px-4 sm:px-6 lg:px-8 flex justify-center">
-    <div class="max-w-4xl w-full">
+<div class="min-h-screen bg-[#fafafa] pt-32 pb-24 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-5xl mx-auto">
         
-        <!-- Top Toolbar -->
-        <div class="flex items-center justify-between mb-8 no-print">
-            <a href="javascript:history.back()" class="flex items-center gap-2 text-slate-400 hover:text-slate-900 transition-colors font-black text-[10px] tracking-widest uppercase">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" d="M15 19l-7-7 7-7"/></svg>
-                Modify Search
-            </a>
-            <button onclick="window.print()" class="px-8 py-3 bg-slate-900 text-white rounded-2xl font-black text-[10px] tracking-widest uppercase hover:bg-indigo-600 transition-all shadow-xl shadow-slate-200">
-                Print Official Marksheet
+        <div class="flex items-center justify-end mb-10 no-print">
+            <button onclick="window.print()" class="bg-slate-900 text-white px-8 py-3 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-indigo-600 transition-all flex items-center gap-3 shadow-xl shadow-slate-200">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-width="2.5" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Download PDF
             </button>
         </div>
 
-        <div class="transcript-card bg-white border border-slate-200 rounded-[3rem] shadow-sm overflow-hidden relative">
+        <div id="printable-marksheet" class="bg-white border border-slate-200 rounded-[3rem] shadow-sm overflow-hidden">
             
-            <!-- Header: School Branding -->
-            <div class="p-10 md:p-14 border-b border-slate-100 flex flex-col md:flex-row justify-between items-center gap-8 bg-white">
-                <div class="flex items-center gap-8">
-                    <!-- School Logo -->
-                    <div class="w-20 h-20 bg-slate-50 rounded-2xl flex items-center justify-center p-2 border border-slate-100">
-                        {% if student.school.logo %}
-                            <img src="{{ student.school.logo.url }}" class="w-full h-full object-contain">
+            <div class="p-8 md:p-10 border-b border-slate-100 relative bg-white">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                    <div class="flex flex-col md:flex-row items-center gap-6">
+                        <div class="w-20 h-20 bg-slate-200 rounded-[1.5rem] flex items-center justify-center text-white">
+                            {% if student.school.logo %}
+                                <img src="{{ student.school.logo.url }}" class="w-12 h-12 object-contain">
+                            {% else %}
+                                <span class="text-2xl font-black">{{ student.school.school_name|slice:":1"|upper }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="text-center md:text-left">
+                            <h1 class="text-2xl font-black text-slate-900 uppercase tracking-tighter">{{ student.school.school_name }}</h1>
+                            <p class="text-[9px] font-black text-indigo-600 uppercase tracking-[0.3em]">{{ student.school.board }} BOARD</p>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center md:text-right">
+                        <div class="px-4 py-1.5 rounded-xl bg-slate-100 font-black text-xs uppercase tracking-widest mb-1">{{ selected_exam }}</div>
+                        <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Year {{ student.class_room.academic_year.year }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-50/50 p-6 md:p-8 border-b border-slate-100">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="w-28 h-32 bg-white border border-slate-200 rounded-2xl flex items-center justify-center overflow-hidden mx-auto md:mx-0">
+                        {% if student.photo %}
+                            <img src="{{ student.photo.url }}" class="w-full h-full object-cover">
                         {% else %}
-                            <svg class="w-10 h-10 text-slate-200" fill="currentColor" viewBox="0 0 20 20"><path d="M10.394 2.827a1 1 0 00-.788 0l-7 3a1 1 0 000 1.848l.898.385a6.017 6.017 0 00.413 8.356 1 1 0 001.413-1.414 4.017 4.017 0 01-.284-5.636l.663.284a1 1 0 00.788 0l7-3a1 1 0 000-1.848l-7-3z"/></svg>
+                            <svg class="w-10 h-10 text-slate-200" fill="currentColor" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/></svg>
                         {% endif %}
                     </div>
-                    <div class="text-center md:text-left">
-                        <h2 class="text-3xl font-black text-slate-900 tracking-tighter uppercase">{{ student.school.school_name }}</h2>
-                        <p class="text-[10px] font-black text-indigo-600 uppercase tracking-[0.3em] mt-1">{{ student.school.board }} BOARD AFFILIATION</p>
-                        <p class="text-slate-400 text-[9px] font-bold mt-1 uppercase tracking-widest">Est. {{ student.school.established_year }} | {{ student.school.official_email }}</p>
-                    </div>
-                </div>
-                
-                <div class="text-center md:text-right">
-                    <div class="inline-block px-5 py-2 rounded-full border-2 {% if percentage >= 35 %}border-emerald-500 text-emerald-600{% else %}border-red-500 text-red-600{% endif %} text-xs font-black uppercase tracking-widest transform -rotate-2">
-                        {% if percentage >= 35 %}RESULT: PASSED{% else %}RESULT: FAILED{% endif %}
+
+                    <div class="md:col-span-3 grid grid-cols-2 md:grid-cols-3 gap-y-5 text-left">
+                        <div>
+                            <p class="text-[8px] font-black text-slate-400 uppercase">Scholar Name</p>
+                            <p class="text-xs font-black text-slate-800 uppercase">{{ student.student_name }}</p>
+                        </div>
+                        <div>
+                            <p class="text-[8px] font-black text-slate-400 uppercase">Father's Name</p>
+                            <p class="text-xs font-black text-slate-800 uppercase">{{ student.father_name }}</p>
+                        </div>
+                        <div>
+                            <p class="text-[8px] font-black text-slate-400 uppercase">Contact</p>
+                            <p class="text-xs font-black text-slate-800">{{ student.guardian_phone }}</p>
+                        </div>
+                        <div>
+                            <p class="text-[8px] font-black text-slate-400 uppercase">Roll No</p>
+                            <p class="text-xs font-black text-slate-800">#{{ student.roll_no }}</p>
+                        </div>
+                        <div>
+                            <p class="text-[8px] font-black text-slate-400 uppercase">DOB</p>
+                            <p class="text-xs font-black text-slate-800">{{ student.dob }}</p>
+                        </div>
+                        <div>
+                            <p class="text-[8px] font-black text-slate-400 uppercase">Address</p>
+                            <p class="text-xs font-black text-slate-800 line-clamp-1">{{ student.address }}</p>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Student Profile: Photo & Info -->
-            <div class="bg-slate-50/50 px-10 py-10 md:px-14 flex flex-col md:flex-row gap-10 border-b border-slate-100 items-center">
-                <!-- Student Photo Slot -->
-                <div class="w-32 h-40 bg-white border border-slate-200 rounded-2xl flex-shrink-0 flex items-center justify-center text-slate-200 overflow-hidden shadow-sm">
-                    <!-- Note: If you add a 'photo' field to Student model later, use student.photo.url -->
-                    <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/></svg>
-                </div>
-
-                <div class="flex-1 grid grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-8">
-                    <div>
-                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Student Name</p>
-                        <p class="font-bold text-slate-900 uppercase tracking-tight text-lg">{{ student.student_name }}</p>
-                    </div>
-                    <div>
-                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Roll Number</p>
-                        <p class="font-bold text-slate-900 text-lg">{{ student.roll_no }}</p>
-                    </div>
-                    <div>
-                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Academic Session</p>
-                        <p class="font-bold text-slate-900">{{ student.class_room.academic_year.year }}</p>
-                    </div>
-                    <div>
-                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Grade / Section</p>
-                        <p class="font-bold text-slate-900 uppercase">Class {{ student.class_room.name }} — {{ student.class_room.section }}</p>
-                    </div>
-                    <div>
-                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Birth Date</p>
-                        <p class="font-bold text-slate-900">{{ student.dob|date:"d M Y" }}</p>
-                    </div>
-                    <div>
-                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Assessment</p>
-                        <p class="font-bold text-indigo-600 uppercase">{{ exam_type }}</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Subject Details -->
-            <div class="p-10 md:p-14">
+            <div class="p-8">
                 <table class="w-full">
                     <thead>
                         <tr class="text-left border-b-2 border-slate-900">
-                            <th class="pb-5 font-black text-slate-900 uppercase tracking-widest text-[10px]">Subject Breakdown</th>
-                            <th class="pb-5 text-center font-black text-slate-900 uppercase tracking-widest text-[10px]">Theory</th>
-                            <th class="pb-5 text-center font-black text-slate-900 uppercase tracking-widest text-[10px]">Practical</th>
-                            <th class="pb-5 text-right font-black text-slate-900 uppercase tracking-widest text-[10px]">Sub-Total</th>
+                            <th class="pb-3 text-[9px] font-black uppercase">Subject</th>
+                            <th class="pb-3 text-center text-[9px] font-black uppercase">Theory</th>
+                            <th class="pb-3 text-center text-[9px] font-black uppercase">Practical</th>
+                            <th class="pb-3 text-right text-[9px] font-black uppercase">Total</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100">
                         {% for m in marks %}
                         <tr>
-                            <td class="py-5 font-bold text-slate-700 uppercase text-sm tracking-tight">{{ m.subject.subject }}</td>
-                            <td class="py-5 text-center text-slate-500 font-medium font-mono text-base">{{ m.theory_marks }}</td>
-                            <td class="py-5 text-center text-slate-500 font-medium font-mono text-base">{{ m.practical_marks }}</td>
-                            <td class="py-5 text-right font-black text-slate-900 font-mono text-lg">{{ m.total_marks }}</td>
+                            <td class="py-4 font-black text-slate-900 text-[11px] uppercase">{{ m.subject.subject }}</td>
+                            <td class="py-4 text-center text-xs font-bold text-slate-600">{{ m.theory_marks }}</td>
+                            <td class="py-4 text-center text-xs font-bold text-slate-600">{{ m.practical_marks }}</td>
+                            <td class="py-4 text-right font-black text-slate-900 text-sm">{{ m.total_marks }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
-                    <tfoot>
-                        <tr class="border-t-2 border-slate-900 bg-slate-50">
-                            <td colspan="3" class="py-8 text-right font-black text-slate-900 uppercase tracking-widest text-[11px] px-6">Grand Total Obtained</td>
-                            <td class="py-8 text-right font-black text-3xl text-slate-900 font-mono px-6">
-                                {{ total_obtained }} <span class="text-sm text-slate-300">/ {{ total_possible }}</span>
-                            </td>
-                        </tr>
-                    </tfoot>
+                    <tr class="bg-slate-900 text-white">
+                        <td colspan="3" class="py-3 px-6 text-right text-[9px] font-black uppercase">Aggregate Total</td>
+                        <td class="py-3 px-6 text-right font-black text-sm">{{ total_obtained }} / {{ total_possible }}</td>
+                    </tr>
                 </table>
             </div>
 
-            <!-- Summary Badges -->
-            <div class="grid grid-cols-2 md:grid-cols-3 border-t border-slate-100">
-                <div class="p-10 border-r border-slate-100 text-center">
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Final Percentage</p>
-                    <p class="text-4xl font-black text-indigo-600">{{ percentage }}%</p>
+            <div class="grid grid-cols-3 border-t border-slate-100">
+                <div class="p-6 text-center border-r border-slate-100">
+                    <p class="text-[8px] font-black text-slate-400 uppercase">Percentage</p>
+                    <p class="text-xl font-black text-indigo-600">{{ percentage }}%</p>
                 </div>
-                <div class="p-10 border-r border-slate-100 text-center">
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Academic Grade</p>
-                    <p class="text-4xl font-black text-slate-900">{{ grade }}</p>
+                <div class="p-6 text-center border-r border-slate-100">
+                    <p class="text-[8px] font-black text-slate-400 uppercase">Grade</p>
+                    <p class="text-xl font-black text-indigo-600">{{ grade }}</p>
                 </div>
-                <div class="p-10 text-center flex flex-col justify-center items-center">
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Authenticated By</p>
-                    <div class="w-32 h-px bg-slate-200 mt-8 mb-2"></div>
-                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Office Registry</p>
+                <div class="p-6 text-center">
+                    <p class="text-[8px] font-black text-slate-400 uppercase">Result</p>
+                    <p class="text-xl font-black uppercase {% if percentage >= 35 %}text-emerald-500{% else %}text-red-600{% endif %}">
+                        {% if percentage >= 35 %}Pass{% else %}Fail{% endif %}
+                    </p>
                 </div>
             </div>
 
-            <div class="p-12 bg-slate-50/30 flex justify-between items-center text-center md:text-left">
-                <div class="text-[9px] text-slate-400 font-medium uppercase tracking-[0.2em] leading-loose max-w-sm">
-                    Disclaimer: This transcript is an official computer-generated statement of marks from the institutional database. For any discrepancies, contact the school administrator immediately.
+            <div class="p-8 flex justify-between items-end">
+                <p class="text-[8px] text-slate-400 font-bold max-w-[200px] uppercase">Official academic transcript generated for {{ student.student_name }}.</p>
+                <div class="text-center">
+                    <div class="w-32 h-0.5 bg-slate-900 mb-2 mx-auto"></div>
+                    <p class="text-[9px] font-black uppercase">Principal Signature</p>
                 </div>
-                <p class="hidden md:block text-[10px] font-black text-slate-300 uppercase tracking-[0.5em]">Authentic Record</p>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    // Set filename and trigger print
+    window.addEventListener('beforeprint', () => {
+        document.title = "{{ student.student_name }}_Result";
+    });
+</script>
 {% endblock %}

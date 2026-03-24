@@ -32,38 +32,56 @@ def institutionProfile(request):
 @school_required
 def editProfile(request):
     school = request.school
+    current_year = datetime.now().year
 
     if request.method == "POST":
+        
+        school_name = request.POST.get("school_name")
+        established_year = request.POST.get("established_year")
+        board = request.POST.get("board")
+        affiliation_number = request.POST.get("affiliation_number")
         phone = request.POST.get("phone")
         pincode = request.POST.get("pincode")
-        affiliation_number = request.POST.get("affiliation_number")
         logo = request.FILES.get("logo")
+        registration_certificate = request.FILES.get("registration_certificate")
 
         if not re.match(r'^[6-9]\d{9}$', phone):
             return render(request, "institute/principal_admin/editProfile.html", {
-                "school": school,
-                "error": "Enter valid 10-digit Indian phone number"
+                "school": school, "error": "Enter valid 10-digit Indian phone number"
             })
 
         if not re.match(r'^\d{6}$', pincode):
             return render(request, "institute/principal_admin/editProfile.html", {
-                "school": school,
-                "error": "Pincode must be 6 digits"
+                "school": school, "error": "Pincode must be 6 digits"
             })
 
-        if affiliation_number:
-            if not re.match(r'^[A-Za-z0-9\-]+$', affiliation_number):
+        if established_year:
+            try:
+                ey_int = int(established_year)
+                if ey_int < 1900 or ey_int > current_year:
+                    raise ValueError
+            except ValueError:
                 return render(request, "institute/principal_admin/editProfile.html", {
-                    "school": school,
-                    "error": "Invalid affiliation number"
+                    "school": school, "error": f"Invalid established year (1900-{current_year})"
                 })
 
+        if affiliation_number and not re.match(r'^[A-Za-z0-9\-]+$', affiliation_number):
+            return render(request, "institute/principal_admin/editProfile.html", {
+                "school": school, "error": "Invalid affiliation number format"
+            })
+
+        school.school_name = school_name
+        school.established_year = established_year if established_year else None
+        school.board = board
+        school.affiliation_number = affiliation_number
         school.phone = phone
         school.pincode = pincode
-        school.affiliation_number = affiliation_number
 
         if logo:
             school.logo = logo
+        
+        if registration_certificate:
+            school.registration_certificate = registration_certificate
 
         school.save()
         return redirect("profile")

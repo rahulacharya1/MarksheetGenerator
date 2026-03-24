@@ -60,7 +60,7 @@ urlpatterns = [
     
     # ---------------- ADMIN ----------------
     
-    path('admin-dashboard', adminDashboard, name="admindashboard"),
+    path('admin', adminDashboard, name="admindashboard"),
     
     path('add-state', addState, name="addstate"),
     path('view-state', viewState, name="viewstate"),

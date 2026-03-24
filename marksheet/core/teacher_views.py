@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from .models import *
 from .decorators import teacher_required
 from datetime import datetime
+import re
 
 
 # ---------------- TEACHER DASHBOARD ----------------
@@ -187,33 +188,35 @@ def addStudents(request):
         studentname = request.POST.get("studentname")
         roll = request.POST.get("roll")
         dob_input = request.POST.get("dob")
+        father_name = request.POST.get("father_name")
+        guardian_phone = request.POST.get("guardian_phone")
+        address = request.POST.get("address")
+        photo = request.FILES.get("photo")
 
         if not studentname:
             return render(request, "institute/teacher_admin/students/addstudents.html", {
-                "error": "Student name required",
-                "classroom": classroom
+                "error": "Student name required", "classroom": classroom
             })
 
         try:
             roll = int(roll)
-        except:
+            if Student.objects.filter(class_room=classroom, roll_no=roll).exists():
+                raise ValueError("Roll number already exists")
+        except ValueError as e:
             return render(request, "institute/teacher_admin/students/addstudents.html", {
-                "error": "Invalid roll number",
-                "classroom": classroom
+                "error": str(e) if "exists" in str(e) else "Invalid roll number", "classroom": classroom
             })
 
         try:
             dob = datetime.strptime(dob_input, "%Y-%m-%d").date()
-        except ValueError:
+        except (ValueError, TypeError):
             return render(request, "institute/teacher_admin/students/addstudents.html", {
-                "error": "Invalid DOB",
-                "classroom": classroom
+                "error": "Invalid DOB", "classroom": classroom
             })
 
-        if Student.objects.filter(class_room=classroom, roll_no=roll).exists():
+        if guardian_phone and not re.match(r'^[6-9]\d{9}$', guardian_phone):
             return render(request, "institute/teacher_admin/students/addstudents.html", {
-                "error": "Roll number already exists",
-                "classroom": classroom
+                "error": "Enter valid 10-digit guardian phone", "classroom": classroom
             })
 
         Student.objects.create(
@@ -221,15 +224,20 @@ def addStudents(request):
             class_room=classroom,
             student_name=studentname,
             roll_no=roll,
-            dob=dob
+            dob=dob,
+            father_name=father_name,
+            guardian_phone=guardian_phone,
+            address=address,
+            photo=photo
         )
 
         return redirect("viewstudents")
 
     return render(request, "institute/teacher_admin/students/addstudents.html", {
-        "classroom": classroom
+        "classroom": classroom,
+        "school": school
     })
-
+    
 
 # ---------------- VIEW STUDENTS ----------------
 @login_required

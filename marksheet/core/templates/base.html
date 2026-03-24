@@ -59,7 +59,7 @@
                         </div>
                     {% else %}
                         <a href="{% url 'state' %}?type=institute" class="hidden sm:block text-sm font-black text-slate-500 hover:text-indigo-600 transition-colors mr-2">Login</a>
-                        <a href="{% url 'state' %}?type=institute" class="hidden md:flex bg-indigo-600 text-white px-6 py-3 rounded-2xl text-sm font-black hover:bg-slate-900 hover:shadow-2xl hover:shadow-indigo-200 transition-all duration-500">
+                        <a href="{% url 'state' %}?type=register" class="hidden md:flex bg-indigo-600 text-white px-6 py-3 rounded-2xl text-sm font-black hover:bg-slate-900 hover:shadow-2xl hover:shadow-indigo-200 transition-all duration-500">
                             Register School
                         </a>
                     {% endif %}
@@ -86,14 +86,14 @@
                 {% else %}
                     <div class="grid grid-cols-2 gap-3">
                         <a href="{% url 'state' %}?type=institute" class="flex items-center justify-center p-5 rounded-[1.5rem] bg-slate-100 text-slate-900 font-black">Login</a>
-                        <a href="{% url 'state' %}?type=institute" class="flex items-center justify-center p-5 rounded-[1.5rem] bg-indigo-600 text-white font-black">Join</a>
+                        <a href="{% url 'state' %}?type=register" class="flex items-center justify-center p-5 rounded-[1.5rem] bg-indigo-600 text-white font-black">Join</a>
                     </div>
                 {% endif %}
             </div>
         </div>
     </header>
 
-    <!-- 🔥 GLOBAL ERROR ALERT -->
+    <!-- GLOBAL ERROR ALERT -->
     {% if error %}
     <div id="error-box" class="fixed top-24 right-6 z-[999] max-w-sm w-full transition-all duration-500">
         <div class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 flex items-start gap-3 shadow-xl">
@@ -185,7 +185,7 @@
 </html>
 
 <script>
-    // 🔥 Auto hide error after 2 sec
+    // Auto hide error after 2 sec
     setTimeout(() => {
         const box = document.getElementById("error-box");
         if (box) {
