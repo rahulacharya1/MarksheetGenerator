@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator, FileExtensionValidator
 from django.core.exceptions import ValidationError
+from cloudinary_storage.storage import RawMediaCloudinaryStorage
 
 
 # ---------------- STATE ----------------
@@ -34,7 +35,9 @@ class School(models.Model):
     pincode = models.CharField(max_length=10)
 
     registration_certificate = models.FileField(
-        upload_to='school_documents/', null=True, blank=True
+        upload_to='school_documents/', null=True, blank=True,
+        storage=RawMediaCloudinaryStorage(),
+        validators=[FileExtensionValidator(allowed_extensions=['pdf'])]
     )
 
     logo = models.ImageField(

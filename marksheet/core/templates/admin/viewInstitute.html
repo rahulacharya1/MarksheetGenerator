@@ -34,13 +34,17 @@
 
                         <h3 class="font-bold text-slate-900 truncate">{{ school.school_name }}</h3>
                         <p class="text-[11px] text-slate-400 font-medium mb-4">{{ school.state.name }} • {{ school.user.username }}</p>
-
                         {% if school.registration_certificate %}
+                        {% if ".pdf" not in school.registration_certificate.url|lower %}
+                        <a href="{{ school.registration_certificate.url }}.pdf" target="_blank" 
+                           class="block w-full py-3 mb-4 rounded-xl border border-dashed border-indigo-200 bg-indigo-50/50 text-indigo-500 hover:text-indigo-600 text-[11px] font-bold text-center hover:bg-indigo-50 transition-colors group">
+                        {% else %}
                         <a href="{{ school.registration_certificate.url }}" target="_blank" 
-                           class="block w-full py-3 mb-4 rounded-xl border border-dashed border-slate-200 bg-slate-50 text-slate-500 text-[11px] font-bold text-center hover:bg-slate-100 transition-colors">
+                           class="block w-full py-3 mb-4 rounded-xl border border-dashed border-indigo-200 bg-indigo-50/50 text-indigo-500 hover:text-indigo-600 text-[11px] font-bold text-center hover:bg-indigo-50 transition-colors group">
+                        {% endif %}
                             <div class="flex items-center justify-center gap-2">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                                OPEN DOCUMENT
+                                <svg class="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                                <span>VIEW CERTIFICATE</span>
                             </div>
                         </a>
                         {% else %}
