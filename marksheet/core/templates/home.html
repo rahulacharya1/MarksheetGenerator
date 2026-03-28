@@ -56,8 +56,32 @@
 
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-            <div class="group relative bg-slate-900 rounded-[4rem] p-16 text-white flex flex-col justify-between min-h-[450px] overflow-hidden transition-all duration-500 hover:shadow-3xl hover:shadow-slate-300">
+        <div class="grid grid-cols-1 {% if not user.is_superuser %}md:grid-cols-2{% endif %} gap-10">
+            
+            {% if user.is_superuser %}
+            <!-- Superuser Admin Card -->
+            <div class="group relative bg-slate-900 rounded-[4rem] p-10 md:p-16 text-white flex flex-col justify-between min-h-[400px] overflow-hidden transition-all duration-500 hover:shadow-3xl hover:shadow-indigo-500/20">
+                <div class="absolute -right-20 -top-20 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl group-hover:bg-indigo-500/30 transition-all"></div>
+                
+                <div class="relative z-10">
+                    <nav class="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.3em] text-indigo-400 mb-6">
+                        <span class="w-2 h-2 rounded-full bg-indigo-400 animate-ping"></span>
+                        System Root Access
+                    </nav>
+                    <h2 class="text-4xl lg:text-6xl font-black uppercase tracking-tighter mb-8 leading-none">Global <br>Command Center</h2>
+                    <p class="text-slate-400 text-base font-bold uppercase tracking-widest leading-relaxed max-w-2xl mb-8">
+                        Full administrative control over all institute nodes, user permissions, and global system configurations.
+                    </p>
+                </div>
+
+                <a href="/admin" class="relative z-10 w-full sm:w-max text-center px-12 py-6 bg-indigo-600 rounded-2xl text-[12px] font-black uppercase tracking-widest hover:bg-white hover:text-slate-900 transition-all shadow-xl">
+                    Enter Admin Panel
+                </a>
+            </div>
+
+            {% else %}
+            <!-- Institute Administration Card -->
+            <div class="group relative bg-slate-900 rounded-[4rem] p-10 md:p-16 text-white flex flex-col justify-between min-h-[450px] overflow-hidden transition-all duration-500 hover:shadow-3xl hover:shadow-slate-300">
                 <div class="absolute -right-20 -top-20 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl group-hover:bg-indigo-500/20 transition-all"></div>
                 
                 <div class="relative z-10">
@@ -66,24 +90,26 @@
                         Centralized management for classroom nodes, faculty assignments, and secure result publication.
                     </p>
                 </div>
+
                 {% if user.is_authenticated %}
                     {% if user.school %}
-                    <a href="{% url "principaldashboard" %}" class="relative z-10 w-max px-12 py-6 bg-indigo-600 rounded-2xl text-[12px] font-black uppercase tracking-widest hover:bg-white hover:text-slate-900 transition-all shadow-xl">
+                    <a href="{% url 'principaldashboard' %}" class="relative z-10 w-full sm:w-max text-center px-12 py-6 bg-indigo-600 rounded-2xl text-[12px] font-black uppercase tracking-widest hover:bg-white hover:text-slate-900 transition-all shadow-xl">
                         Enter Dashboard
                     </a>
                     {% else %}
-                    <a href="{% url "teacherdashboard" %}" class="relative z-10 w-max px-12 py-6 bg-indigo-600 rounded-2xl text-[12px] font-black uppercase tracking-widest hover:bg-white hover:text-slate-900 transition-all shadow-xl">
+                    <a href="{% url 'teacherdashboard' %}" class="relative z-10 w-full sm:w-max text-center px-12 py-6 bg-indigo-600 rounded-2xl text-[12px] font-black uppercase tracking-widest hover:bg-white hover:text-slate-900 transition-all shadow-xl">
                         Enter Dashboard
                     </a>
                     {% endif %}
                 {% else %}
-                <a href="{% url 'state' %}?type=institute" class="relative z-10 w-max px-12 py-6 bg-indigo-600 rounded-2xl text-[12px] font-black uppercase tracking-widest hover:bg-white hover:text-slate-900 transition-all shadow-xl">
+                <a href="{% url 'state' %}?type=institute" class="relative z-10 w-full sm:w-max text-center px-12 py-6 bg-indigo-600 rounded-2xl text-[12px] font-black uppercase tracking-widest hover:bg-white hover:text-slate-900 transition-all shadow-xl">
                     Enter Portal Node
                 </a>
                 {% endif %}
             </div>
 
-            <div class="group relative bg-white border border-slate-200 rounded-[4rem] p-16 flex flex-col justify-between min-h-[450px] overflow-hidden transition-all duration-500 hover:shadow-3xl hover:shadow-cyan-100 hover:border-cyan-500/30">
+            <!-- Student Hub Card -->
+            <div class="group relative bg-white border border-slate-200 rounded-[4rem] p-10 md:p-16 flex flex-col justify-between min-h-[450px] overflow-hidden transition-all duration-500 hover:shadow-3xl hover:shadow-cyan-100 hover:border-cyan-500/30">
                 <div class="absolute -right-20 -top-20 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl group-hover:bg-cyan-500/10 transition-all"></div>
 
                 <div class="relative z-10">
@@ -92,10 +118,12 @@
                         Access detailed performance reports, download marksheets, and track your academic growth history.
                     </p>
                 </div>
-                <a href="{% url 'state' %}?type=student" class="relative z-10 w-max px-12 py-6 bg-cyan-600 rounded-2xl text-white text-[12px] font-black uppercase tracking-widest hover:bg-slate-900 transition-all shadow-xl shadow-cyan-100">
+                <a href="{% url 'state' %}?type=student" class="relative z-10 w-full sm:w-max text-center px-12 py-6 bg-cyan-600 rounded-2xl text-white text-[12px] font-black uppercase tracking-widest hover:bg-slate-900 transition-all shadow-xl shadow-cyan-100">
                     Check My Results
                 </a>
             </div>
+            {% endif %}
+
         </div>
 
     </div>

@@ -11,8 +11,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv()
 
-# SECRET_KEY = 'django-insecure-9dd-0ykoj(=m9f#$229jzlyemfht5s2u^q8#)y%!^x!5$8)#d#'
-
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 DEBUG = os.environ.get("DEBUG", "False") == "True"
@@ -109,7 +107,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
