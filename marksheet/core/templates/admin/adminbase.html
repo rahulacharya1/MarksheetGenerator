@@ -9,6 +9,8 @@
     <link rel="shortcut icon" type="image/png" href="{% static 'core/images/favicon.png' %}">
     <link rel="stylesheet" href="{% static 'core/css/output.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
 
@@ -153,6 +155,30 @@
                             <li><a href="{% url 'privacy_policy' %}" class="hover:text-indigo-600 transition-colors">Privacy Policy</a></li>
                             <li><a href="{% url 'terms_of_service' %}" class="hover:text-indigo-600 transition-colors">Terms of Service</a></li>
                         </ul>
+                    </div>
+                    <div class="space-y-4">
+                        <p class="text-[10px] font-black text-slate-900 uppercase tracking-widest">// Connect</p>
+                        <div class="space-y-2 text-xs font-bold text-slate-500">
+                            <p>
+                                <a href="mailto:rahulkumaracharya199@gmail.com" class="hover:text-indigo-600 transition-colors break-all">
+                                    rahulkumaracharya199@gmail.com
+                                </a>
+                            </p>
+                            <div class="flex gap-3 pt-1">
+                                <a href="https://acharyaworks.in" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600 transition-colors text-base" title="AcharyaWorks" aria-label="AcharyaWorks">
+                                    <i class="fa-solid fa-briefcase"></i>
+                                </a>
+                                <a href="https://linkedin.com/in/rahulkumaracharya/" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600 transition-colors text-base" title="LinkedIn" aria-label="LinkedIn">
+                                    <i class="fab fa-linkedin"></i>
+                                </a>
+                                <a href="https://github.com/rahul-kumar-acharya" target="_blank" rel="noopener" class="text-slate-400 hover:text-slate-900 transition-colors text-base" title="GitHub" aria-label="GitHub">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                                <a href="https://www.instagram.com/acharyarahul.in" target="_blank" rel="noopener" class="text-slate-400 hover:text-pink-500 transition-colors text-base" title="Instagram" aria-label="Instagram">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

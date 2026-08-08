@@ -8,10 +8,13 @@
     <title>{% block title %}EduMarks - Best Academic Record Management System | Online Student Marksheet & Result Verification{% endblock %}</title>
     <meta name="description" content="{% block meta_description %}Everything you need to manage modern school academic records, from instant student result verification to automated grade transcripts and principal administration.{% endblock %}">
     <meta name="keywords" content="{% block meta_keywords %}edumarks, best school management system, online student marksheet, result verification portal, academic records, school software india{% endblock %}">
-    <meta name="author" content="EduMarks Engineering Team">
+    <meta name="author" content="Rahul Kumar Acharya (AcharyaWorks)">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 
     <link rel="canonical" href="{% block canonical_url %}https://edumarks.acharyaworks.in{{ request.path }}{% endblock %}">
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <!-- Open Graph & Social Card Metadata -->
     <meta property="og:site_name" content="EduMarks">
@@ -46,11 +49,29 @@
           "name": "EduMarks",
           "alternateName": ["EduMarks Portal", "EduMarks Academic System"],
           "description": "Everything you need to run modern school academic records, from online student marksheets to automated grade transcripts.",
+          "author": {
+            "@type": "Person",
+            "name": "Rahul Kumar Acharya",
+            "url": "https://acharyaworks.in",
+            "email": "rahulkumaracharya199@gmail.com",
+            "sameAs": [
+              "https://acharyaworks.in",
+              "https://linkedin.com/in/rahulkumaracharya/",
+              "https://github.com/rahul-kumar-acharya",
+              "https://www.instagram.com/acharyarahul.in"
+            ]
+          },
           "publisher": {
             "@type": "Organization",
-            "name": "EduMarks",
-            "url": "https://edumarks.acharyaworks.in/",
-            "logo": "https://edumarks.acharyaworks.in{% static 'core/images/favicon.png' %}"
+            "name": "AcharyaWorks",
+            "url": "https://acharyaworks.in",
+            "logo": "https://edumarks.acharyaworks.in{% static 'core/images/favicon.png' %}",
+            "sameAs": [
+              "https://acharyaworks.in",
+              "https://linkedin.com/in/rahulkumaracharya/",
+              "https://github.com/rahul-kumar-acharya",
+              "https://www.instagram.com/acharyarahul.in"
+            ]
           },
           "potentialAction": {
             "@type": "SearchAction",
@@ -302,8 +323,8 @@
 
     <footer class="bg-white border-t border-slate-100 pt-16 pb-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-                <div class="col-span-1 md:col-span-1 space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-8 mb-12">
+                <div class="col-span-1 sm:col-span-2 md:col-span-1 space-y-4">
                     <a href="{% url 'home' %}" class="flex items-center gap-2">
                         <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-black text-xs">EM</div>
                         <span class="text-xl font-bold text-slate-900">EduMarks</span>
@@ -331,6 +352,30 @@
                     <div class="flex items-center gap-2">
                         <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
                         <span class="text-sm text-slate-600 font-medium">All systems operational</span>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <h3 class="text-xs font-mono uppercase tracking-widest text-slate-400">// Connect</h3>
+                    <div class="space-y-3 text-sm text-slate-500 font-semibold">
+                        <p>
+                            <a href="mailto:rahulkumaracharya199@gmail.com" class="hover:text-indigo-600 transition-colors break-all">
+                                rahulkumaracharya199@gmail.com
+                            </a>
+                        </p>
+                        <div class="flex gap-4 pt-2">
+                            <a href="https://acharyaworks.in" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600 transition-colors text-lg" title="AcharyaWorks" aria-label="AcharyaWorks">
+                                <i class="fa-solid fa-briefcase"></i>
+                            </a>
+                            <a href="https://linkedin.com/in/rahulkumaracharya/" target="_blank" rel="noopener" class="text-slate-400 hover:text-indigo-600 transition-colors text-lg" title="LinkedIn" aria-label="LinkedIn">
+                                <i class="fab fa-linkedin"></i>
+                            </a>
+                            <a href="https://github.com/rahul-kumar-acharya" target="_blank" rel="noopener" class="text-slate-400 hover:text-slate-900 transition-colors text-lg" title="GitHub" aria-label="GitHub">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            <a href="https://www.instagram.com/acharyarahul.in" target="_blank" rel="noopener" class="text-slate-400 hover:text-pink-500 transition-colors text-lg" title="Instagram" aria-label="Instagram">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
